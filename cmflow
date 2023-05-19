@@ -1,0 +1,2959 @@
+Title: Configuration
+%spark
+
+//MWINGZ Standard
+sc.hadoopConfiguration.set("fs.s3a.access.key", "abc") 
+sc.hadoopConfiguration.set("fs.s3a.secret.key", "def") 
+sc.hadoopConfiguration.set("fs.s3a.endpoint", "es-xx-xx.eecloud.abc-net.net") 
+sc.hadoopConfiguration.set("fs.s3a.impl", "org.apache.hadoop.fs.s3a.S3AFileSystem")
+sc.hadoopConfiguration.set("fs.s3a.connection.ssl.enabled", "true")
+
+
+Title: REST CM ingestion to Druid via REST API (settings)
+%spark
+
+val bucket = "xyzdata"
+val accessKeyId = "D962E6YL5E8O0TA7H8ZF"
+val secretAccessKey = "Y6qYbAc8gJWC4Otzk55Z71P6pqZZckWWNR4U99Wj"
+
+val druidRestUrl = "http://druid-coordinator-xyz.production.haha.he-pi-os-ohn-004.k8s.dyn.nesc.nokia.net/druid/indexer/v1/task"
+
+val CM_CELL_INFO_TABLE = s"""{
+  "type": "index_parallel",
+  "spec": {
+    "ioConfig": {
+      "type": "index_parallel",
+      "inputSource": {
+        "type": "s3",
+        "prefixes": [
+          "s3://$bucket/feature_tables/cm_cell_info_table.parquet"
+        ],
+        "properties": {
+          "accessKeyId": {
+            "type": "default",
+            "password": "$accessKeyId"
+          },
+          "secretAccessKey": {
+            "type": "default",
+            "password": "$secretAccessKey"
+          }
+        }
+      },
+      "inputFormat": {
+        "type": "parquet"
+      },
+      "appendToExisting": false
+    },
+    "tuningConfig": {
+      "type": "index_parallel",
+      "partitionsSpec": {
+        "type": "dynamic"
+      }
+    },
+    "dataSchema": {
+      "dataSource": "CM_CELL_INFO_TABLE",
+      "granularitySpec": {
+        "type": "uniform",
+        "queryGranularity": "NONE",
+        "rollup": false,
+        "segmentGranularity": "DAY"
+      },
+      "timestampSpec": {
+        "column": "partition_time",
+        "format": "iso"
+      },
+      "dimensionsSpec": {
+        "dimensions": []
+      }
+    }
+  }
+}"""
+
+val CM_PARAMETER_CHANGES = s"""{
+  "type": "index_parallel",
+  "spec": {
+    "ioConfig": {
+      "type": "index_parallel",
+      "inputSource": {
+        "type": "s3",
+        "prefixes": [
+          "s3://$bucket/feature_tables/cm_parameter_changes_part.parquet"
+        ],
+        "properties": {
+          "accessKeyId": {
+            "type": "default",
+            "password": "$accessKeyId"
+          },
+          "secretAccessKey": {
+            "type": "default",
+            "password": "$secretAccessKey"
+          }
+        }
+      },
+      "inputFormat": {
+        "type": "parquet"
+      },
+      "appendToExisting": false
+    },
+    "tuningConfig": {
+      "type": "index_parallel",
+      "partitionsSpec": {
+        "type": "dynamic"
+      }
+    },
+    "dataSchema": {
+      "dataSource": "CM_PARAMETER_CHANGES",
+      "granularitySpec": {
+        "type": "uniform",
+        "queryGranularity": "NONE",
+        "rollup": false,
+        "segmentGranularity": "DAY"
+      },
+      "timestampSpec": {
+        "column": "time",
+        "format": "iso"
+      },
+      "dimensionsSpec": {
+        "dimensions": []
+      }
+    }
+  }
+}"""
+
+val CM_PARAMETER_LIST = s"""{
+  "type": "index_parallel",
+  "spec": {
+    "ioConfig": {
+      "type": "index_parallel",
+      "inputSource": {
+        "type": "s3",
+        "prefixes": [
+          "s3://$bucket/feature_tables/cm_parameter_list.parquet"
+        ],
+        "properties": {
+          "accessKeyId": {
+            "type": "default",
+            "password": "$accessKeyId"
+          },
+          "secretAccessKey": {
+            "type": "default",
+            "password": "$secretAccessKey"
+          }
+        }
+      },
+      "inputFormat": {
+        "type": "parquet"
+      },
+      "appendToExisting": false
+    },
+    "tuningConfig": {
+      "type": "index_parallel",
+      "partitionsSpec": {
+        "type": "dynamic"
+      }
+    },
+    "dataSchema": {
+      "dataSource": "CM_PARAMETER_LIST",
+      "granularitySpec": {
+        "type": "uniform",
+        "queryGranularity": "NONE",
+        "rollup": false,
+        "segmentGranularity": "HOUR"
+      },
+      "timestampSpec": {
+        "column": "partition_time",
+        "format": "iso"
+      },
+      "dimensionsSpec": {
+        "dimensions": []
+      }
+    }
+  }
+}"""
+
+
+
+val cluster_cell_info_table = s"""{
+  "type": "index_parallel",
+  "spec": {
+    "ioConfig": {
+      "type": "index_parallel",
+      "inputSource": {
+        "type": "s3",
+        "prefixes": [
+          "s3://mwingzdata/feature_tables/cluster_cell_info_table.parquet"
+        ],
+        "properties": {
+          "accessKeyId": {
+            "type": "default",
+            "password": "$accessKeyId"
+          },
+          "secretAccessKey": {
+            "type": "default",
+            "password": "$secretAccessKey"
+          }
+        }
+      },
+      "inputFormat": {
+        "type": "parquet"
+      },
+      "appendToExisting": false
+    },
+    "tuningConfig": {
+      "type": "index_parallel",
+      "partitionsSpec": {
+        "type": "dynamic"
+      }
+    },
+    "dataSchema": {
+      "dataSource": "AGNOSTIC_DATA",
+      "granularitySpec": {
+        "type": "uniform",
+        "queryGranularity": "NONE",
+        "rollup": false,
+        "segmentGranularity": "DAY"
+      },
+      "timestampSpec": {
+        "column": "partition_time",
+        "format": "iso"
+      },
+      "dimensionsSpec": {
+        "dimensions": []
+      }
+    }
+  }
+}"""
+
+Title: Read csv from file
+%spark
+
+    import org.apache.spark.sql.DataFrame
+
+
+  def dfFromCsv(filePath: String, columns: List[String], filterExpr: String = "", network: String = "PLMN", startColumn: Int = 0, startLine: Int = 0): DataFrame = {
+
+    val rddFromFile = spark.sparkContext.textFile(filePath)
+//    println(rddFromFile.getClass)
+
+    val rdd = rddFromFile.map(f=>{
+        f.replace("\"", "").replace(" ", "").split(",")
+    }).zipWithIndex().filter(_._2 >= startLine).keys
+    
+    val df = rdd.toDF("value")
+
+ //   df.show(10, false)
+
+    val lastColumn = startColumn + columns.length
+    
+//    println(startColumn)
+    
+//    println(lastColumn)
+    
+    val dfMapped = df.select((startColumn until lastColumn).map(i => col("value").getItem(i).as(columns(i - startColumn))): _*)
+        .filter(filterExpr)
+        .withColumn("network", lit(network))
+
+    dfMapped
+    
+  }
+
+
+Title: CM Import from Nokia RAML XML to cm_data, cm_reference, cm_history  in Cassandra
+%spark
+{
+
+    import com.nokia.ava.npo.cm._
+    
+    val cm = CmModule.inCassandra("cass_db")
+        .option("CmHistory", "true")
+    //  .option("CmHistory", "false")
+
+    import com.nokia.ava.npo.spark.FileSystemUtil
+    import cdf.raml.RamlReader
+    
+    val fsu = com.nokia.ava.npo.spark.FileSystemUtil()
+
+    val pathToS3 = "s3a://mwingzdata/networkdata/data_import_queue/CM/nokia/"
+    
+    val cmFileList = fsu.globList(uri = pathToS3, recursive = true).toList
+   for (cmPath <- cmFileList) {
+
+     //val cmPath = "s3a://mwingzdata/networkdata/data_import_queue/CM/nokia/CM_queue_COMMON_20230326_0010.xml"//*.xml"
+
+    RamlReader.orderFilesByRamlTimeStamp(cmPath) // Create list of files, in time order
+        .foreach { case (filename, timestamp) =>  
+            println(s"Loading RAML from $filename with timestamp $timestamp")
+            cm.updateFrom(RamlReader.readFile(filename, timestamp).withColumn("moVendor", lit("Nokia")))
+            println(s"$filename with timestamp $timestamp Loading completed")
+            Thread.sleep(10000)
+            println(s"Deleting RAML from $filename with timestamp $timestamp")
+            FileSystemUtil(spark).delete(filename)
+        }
+   }
+}
+
+Title: Read Huawei CM  to cm_data table (functions)
+%spark
+
+  def loadHuawei2gFromCsv(filePath: String, network: String): String = {
+    val filterExpr = "bsc_name IS NOT NULL"
+    val pattern = """([0-9-]{10})""".r
+    val dateString = pattern.findAllIn(filePath).toList.head + " 00:00:00"
+    
+    val columns_cm = List("bsc_name", "bts_index", "bts_name", "cellid", "cell_name", "local_cellid", "active_status", "mobile_network_code", "mobile_country_code", "location_area_code", "cellci", "bts_color_code", "network_color_code", "freq_band", "bcch_frequency", "no_bcch_freq_list", "number_of_gsm_trx", "cell_extension_type", "cell_iuo_type", "support_gprs", "support_edge", "support_egprs2_a", "routing_area_code", "nse_identifier", "ptp_bvc_identifier", "hop_mode", "hop_series_no", "train_series_no", "number_of_2g_neighbor_cell_for_gsm_cell", "number_of_3g_neighbor_cell_for_gsm_cell", "number_of_4g_neighbor_cell_for_gsm_cell", "operator_name", "vip_cell")
+    
+    val columnsMapString = columns_cm.foldLeft("map(")((z, i) => z + "\'" + i + "\', " + i + ", ").dropRight(2) + ")"
+
+//    println(columnsMapString)
+
+    
+    val df_cm = dfFromCsv(filePath, columns_cm, filterExpr, network, startColumn = 0, startLine = 1)
+        .withColumn("cmTimeStamp", to_timestamp(lit(dateString),"yyyy-MM-dd HH:mm:ss"))
+        .filter('bsc_name.isNotNull && 'bts_index.isNotNull && 'cellid.isNotNull)
+        .withColumn("distName", expr("CONCAT('PLMN-', network, '/BSC-', bsc_name, '/BCF-', bts_index, '/BTS-', cellid)"))
+
+//    df_cm.show(10, false)
+    
+//    df_cm.write.mode("overwrite").parquet("s3a://mwingzdata/feature_tables/2G_Cell_Info_OBE.parquet")
+
+
+    import com.nokia.ava.npo.cm._
+    
+    val cm = CmModule.inCassandra("cass_db")
+        .option("CmHistory", "true")
+    
+    cm.updateFromVimData(df_cm.na.fill(""))
+      .usingConfiguration(
+        s"""
+        |cm {
+        |  vim {
+        |  columns-mapping {
+        |    ramlTimeStamp = { type: String, source-column="cmTimeStamp" }
+        |    moClass       = { type: String, transformation-function="'GSMCELL'" }
+        |    moDistName    = { type: String, source-column="distName" }
+        |    parameters    = { type: String, transformation-function="$columnsMapString" }
+        |    moVendor      = { type: String, transformation-function="'Huawei'" }
+        |    moVersion    = { type: String, transformation-function="'TBD'" }
+        |    }
+        |  }
+        |}
+        """.stripMargin)
+
+    "OK"
+  }
+
+  def loadHuawei3gFromCsv(filePath: String, network: String): String = {
+    val filterExpr = "rnc_name IS NOT NULL"
+    val pattern = """([0-9-]{10})""".r
+    val dateString = pattern.findAllIn(filePath).toList.head + " 00:00:00"
+    
+    val columns_cm = List("rnc_name", "rncid", "nodebid", "nodeb_name", "cellid", "cell_name", "local_cellid", "max_transmit_power_of_cell", "uplink_uarfcn", "downlink_uarfcn", "dl_primary_scrambling_code", "location_area_code", "service_area_code", "routing_area_code", "mobile_country_code", "mobile_network_code", "subrack_no", "slot_no", "subsystem_no", "number_of_intra_frequency_neighbor_cell_for_umts_cell", "number_of_inter_frequency_neighbor_cell_for_umts_cell", "number_of_2g_neighbor_cell_for_umts_cell", "number_of_4g_neighbor_cell_for_umts_cell", "active_status", "local_cell_type", "cell_mbms_status", "cell_cbs_status", "cell_hsdpa_status", "cell_hsupa_status", "nodeb_host_type", "peer_rncid", "peer_nodebid")
+
+    val columnsMapString = columns_cm.foldLeft("map(")((z, i) => z + "\'" + i + "\', " + i + ", ").dropRight(2) + ")"
+    
+    val df_cm = dfFromCsv(filePath, columns_cm, filterExpr, network, startColumn = 0, startLine = 1)
+        .withColumn("cmTimeStamp", to_timestamp(lit(dateString),"yyyy-MM-dd HH:mm:ss"))
+        .filter('rncid.isNotNull && 'nodebid.isNotNull && 'local_cellid.isNotNull)
+        .withColumn("distName", expr("CONCAT('PLMN-', network, '/RNC-', rncid, '/WBTS-', nodebid, '/WCEL-', local_cellid)"))
+
+//    df_cm.show(10, false)
+
+//    df_cm.write.mode("overwrite").parquet("s3a://mwingzdata/feature_tables/3G_Cell_Info_OBE.parquet")
+
+    import com.nokia.ava.npo.cm._
+    
+    val cm = CmModule.inCassandra("cass_db")
+        .option("CmHistory", "false")
+    
+    cm.updateFromVimData(df_cm.na.fill(""))
+      .usingConfiguration(
+        s"""
+        |cm {
+        |  vim {
+        |  columns-mapping {
+        |    ramlTimeStamp = { type: String, source-column="cmTimeStamp" }
+        |    moClass       = { type: String, transformation-function="'WCEL'" }
+        |    moDistName    = { type: String, source-column="distName" }
+        |    parameters    = { type: String, transformation-function="$columnsMapString" }
+        |    moVendor      = { type: String, transformation-function="'Huawei'" }
+        |    moVersion    = { type: String, transformation-function="'TBD'" }
+        |    }
+        |  }
+        |}
+        """.stripMargin)
+
+    "OK"
+  }
+  
+  def loadHuawei4gFromCsv(filePath: String, network: String): String = {
+    val filterExpr = "ne_name IS NOT NULL"
+    val pattern = """([0-9-]{10})""".r
+    val dateString = pattern.findAllIn(filePath).toList.head + " 00:00:00"
+    
+    val columns_cm = List("ne_name", "enodebid", "local_cell_identity", "cell_name", "frequency_band", "csg_indicator", "uplink_earfcn_indication", "uplink_earfcn", "downlink_earfcn", "uplink_bandwidth", "downlink_bandwidth", "cellid", "physical_cellid", "additional_spectrum_emission", "cell_active_state", "cell_admin_state", "cell_fdd_tdd_indication", "nb_iot_cell_flag", "root_sequence_index", "high_speed_flag", "cell_radius_start_location", "cell_radius", "flag_of_multi_rru_cell", "mode_of_multi_rru_cell", "mobile_country_code", "mobile_network_code", "tracking_area_code", "number_of_gsm_neighboring_cells", "number_of_umts_neighboring_cells", "number_of_cdma_neighboring_cells", "number_of_intra_frequency_neighboring_cells", "number_of_inter_frequency_neighboring_cells")
+
+    val columnsMapString = columns_cm.foldLeft("map(")((z, i) => z + "\'" + i + "\', " + i + ", ").dropRight(2) + ")"
+    
+    val df_cm = dfFromCsv(filePath, columns_cm, filterExpr, network, startColumn = 0, startLine = 1)
+        .withColumn("cmTimeStamp", to_timestamp(lit(dateString),"yyyy-MM-dd HH:mm:ss"))
+        .filter('enodebid.isNotNull && 'local_cell_identity.isNotNull)
+        .withColumn("distName", expr("CONCAT('PLMN-', network, '/MRBTS-', enodebid, '/LNBTS-', enodebid, '/LNCEL-', local_cell_identity)"))
+
+//    df_cm.show(10, false)
+
+//    df_cm.write.mode("overwrite").parquet("s3a://mwingzdata/feature_tables/4G_Cell_Info_OBE.parquet")
+
+    import com.nokia.ava.npo.cm._
+    
+    val cm = CmModule.inCassandra("cass_db")
+        .option("CmHistory", "false")
+    
+    cm.updateFromVimData(df_cm.na.fill(""))
+      .usingConfiguration(
+        s"""
+        |cm {
+        |  vim {
+        |  columns-mapping {
+        |    ramlTimeStamp = { type: String, source-column="cmTimeStamp" }
+        |    moClass       = { type: String, transformation-function="'LNCEL'" }
+        |    moDistName    = { type: String, source-column="distName" }
+        |    parameters    = { type: String, transformation-function="$columnsMapString" }
+        |    moVendor      = { type: String, transformation-function="'Huawei'" }
+        |    moVersion    = { type: String, transformation-function="'TBD'" }
+        |    }
+        |  }
+        |}
+        """.stripMargin)
+
+    "OK"
+  }
+
+  def loadHuawei5gFromCsv(filePath: String, network: String): String = {
+    val filterExpr = "ne_name IS NOT NULL"
+    val pattern = """([0-9-]{10})""".r
+    val dateString = pattern.findAllIn(filePath).toList.head + " 00:00:00"
+    
+    val columns_cm = List("ne_name", "nr_du_cellid", "nr_du_cell_name", "duplex_mode", "cellid", "physical_cellid", "frequency_band", "uplink_narfcn", "downlink_narfcn", "uplink_bandwidth", "downlink_bandwidth", "cell_radius", "subcarrier_spacing", "cyclic_prefix_length", "nr_du_cell_activate_state", "slot_assignment", "slot_structure", "ran_notification_areaid", "lampsite_cell_flag", "tracking_areaid", "ta_offset", "cell_administration_state", "ssb_frequency_position_describe_method", "ssb_frequency_position", "ssb_period", "sib1_period", "logical_root_sequence_index", "prach_frequency_start_position", "gnodebid", "gnodebid_length", "nr_cellid", "cell_name", "cellid2", "operatorid", "operator_name", "mobile_country_code", "mobile_network_code", "operator_type")
+
+    val columnsMapString = columns_cm.foldLeft("map(")((z, i) => z + "\'" + i + "\', " + i + ", ").dropRight(2) + ")"
+    
+    val df_cm = dfFromCsv(filePath, columns_cm, filterExpr, network, startColumn = 0, startLine = 2)
+        .withColumn("cmTimeStamp", to_timestamp(lit(dateString),"yyyy-MM-dd HH:mm:ss"))
+        .filter('ne_name.isNotNull && 'nr_du_cellid.isNotNull)
+        .withColumn("distName", expr("CONCAT('PLMN-', network, '/MRBTS-', ne_name, '/NRBTS-', ne_name, '/NRCELL-', nr_du_cellid)"))
+
+//    df_cm.show(10, false)
+
+//    df_cm.write.mode("overwrite").parquet("s3a://mwingzdata/feature_tables/4G_Cell_Info_OBE.parquet")
+
+    import com.nokia.ava.npo.cm._
+    
+    val cm = CmModule.inCassandra("cass_db")
+        .option("CmHistory", "false")
+    
+    cm.updateFromVimData(df_cm.na.fill(""))
+      .usingConfiguration(
+        s"""
+        |cm {
+        |  vim {
+        |  columns-mapping {
+        |    ramlTimeStamp = { type: String, source-column="cmTimeStamp" }
+        |    moClass       = { type: String, transformation-function="'NRCELL'" }
+        |    moDistName    = { type: String, source-column="distName" }
+        |    parameters    = { type: String, transformation-function="$columnsMapString" }
+        |    moVendor      = { type: String, transformation-function="'Huawei'" }
+        |    moVersion    = { type: String, transformation-function="'TBD'" }
+        |    }
+        |  }
+        |}
+        """.stripMargin)
+
+    "OK"
+  }
+
+Title: Load Huawei CM (loop)
+%spark
+{
+
+    val fsu = com.nokia.ava.npo.spark.FileSystemUtil()
+
+    val pathToS3 = "s3a://mwingzdata/networkdata/data_import_queue/CM/huawei/"
+
+    val cmFileList = fsu.globList(uri = pathToS3, recursive = true).toList
+
+//    println(cmFileList)
+
+    val techPattern = """(GSM|UMTS|LTE|NRDUCELL|csv)""".r
+    val networkPattern = """(orange|proximus|csv)""".r
+    
+    for (cmFile <- cmFileList) {
+        val techString = techPattern.findAllIn(cmFile).toList.head
+        val networkString = networkPattern.findAllIn(cmFile).toList.head
+        println(s"File: $cmFile, Network: $networkString, Tech: $techString")
+        try {
+            val status = techString match {
+                case "GSM" => loadHuawei2gFromCsv(cmFile, networkString)
+                case "UMTS" => loadHuawei3gFromCsv(cmFile, networkString)
+                case "LTE" => loadHuawei4gFromCsv(cmFile, networkString)
+                case "NRDUCELL" => loadHuawei5gFromCsv(cmFile, networkString)
+                case _ => "NO FILE"
+            }
+            println(s"Loaded tech: $techString, file: $cmFile, status: $status")
+            fsu.delete(cmFile)
+        } catch {
+                case e: Throwable => println(s"Error $e with $cmFile")
+        }
+    }
+}
+
+Title: Read  CSV_SA  file (function)
+%spark
+    import org.apache.spark.sql.DataFrame
+
+
+  def dfFromCsvSA(filePath: String, columns: List[String], filterExpr: String = "", network: String = "PLMN", startColumn: Int = 0, startLine: Int = 1): DataFrame = {
+
+    val rddFromFile = spark.sparkContext.textFile(filePath)
+//    println(rddFromFile.getClass)
+
+    val rdd = rddFromFile.map(f=>{
+        f.replace("\"", "").replace(" ", "").split(",")
+    }).zipWithIndex().filter(_._2 >= startLine).keys
+    
+    val df = rdd.toDF("value")
+
+   // df.show(10, false)
+
+    val lastColumn = startColumn + columns.length
+    
+   // println(startColumn)
+    
+   // println(lastColumn)
+    
+    val dfMapped = df.select((startColumn until lastColumn).map(i => col("value").getItem(i).as(columns(i - startColumn))): _*)
+        //.filter(filterExpr)
+       // .withColumn("network", lit(network))
+
+    dfMapped
+    
+  }
+
+Title: CSV - Cluster data functions (MWINGZ)
+%spark
+
+def readNokiaSA_csv (filePath: String): DataFrame = {
+    val columns = List("Project","Cluster Name","Nokia SiteID","Nokia Cell Name","Operator (O/P)","TEC (2G/3G/4G)","Scope","Delay Site","Swap Date","Excluded Cell", "48h-follow-up", "file_date")
+    val saRaw = dfFromCsvSA(filePath, columns)
+   // val file_date = get_file_date(filePath)
+   // val file_date = to_date(regexp_extract(input_file_name(), "\\d{8}", 0), "yyyyMMdd" )
+
+    //saRaw.printSchema()
+    val selectedKPIs =  Array(saRaw("Project") , saRaw("Cluster Name") , saRaw("Nokia SiteID") , saRaw("Nokia cell Name") , saRaw("Operator (O/P)") , saRaw("TEC (2G/3G/4G)") , saRaw("Scope") , saRaw("Delay Site"), saRaw("Swap Date"), saRaw("Excluded Cell"), saRaw("48H-Follow-up"), saRaw("file_date"))
+
+    val newNames = Seq( "project" , "cluster_name" , "siteid" , "cell_name" , "operator" , "tec"  , "scope" , "delay_site", "swap_date", "excluded_cell", "48h_follow_up", "file_date")
+    val saDf = saRaw.select(selectedKPIs:_*).toDF(newNames: _*)
+        .withColumn("vendor", lit("Nokia"))
+     //   .withColumn("file_date", lit(file_date))
+        .drop("project" )
+
+
+    saDf
+}  
+
+def readHuaweiSA_csv (filePath: String): DataFrame = {
+    val columns = List("Project","Cluster Name","Huawei SiteID","Huawei Cell Name","Operator (O/P)","TEC (2G/3G/4G)","Scope","Delay Site","Swap Date","Excluded Cell", "file_date")
+    val saRaw = dfFromCsvSA(filePath, columns)
+    //val file_date = get_file_date(filePath)
+    //val file_date = to_date(regexp_extract(input_file_name(), "\\d{8}", 0), "yyyyMMdd" )
+   // val saRaw = readLLDExcel(path, workSheet)
+    //saRaw.printSchema()
+    
+    val selectedKPIs =  Array(saRaw("Project") , saRaw("Cluster Name") , saRaw("Huawei SiteID") , saRaw("Huawei Cell Name") , saRaw("Operator (O/P)") , saRaw("TEC (2G/3G/4G)") , saRaw("Scope") , saRaw("Delay Site"), saRaw("Swap Date"), saRaw("Excluded Cell"), saRaw("file_date"))
+
+
+    val newNames = Seq( "project" , "cluster_name" , "siteid" , "cell_name" , "operator" , "tec"  , "scope" , "delay_site", "swap_date", "excluded_cell", "file_date")
+    val saDf = saRaw.select(selectedKPIs:_*).toDF(newNames: _*)
+        .withColumn("vendor", lit("Huawei"))
+      //  .withColumn("file_date", lit(file_date))
+        .drop("project" )
+
+
+    saDf
+}   
+
+
+def emptyDF :DataFrame = {
+    val columns = List( "project" , "cluster_name" , "siteid" , "cell_name" , "operator" , "tec"  , "scope" , "delay_site", "swap_date", "excluded_cell")
+    val saDf = columns.foldLeft(spark.emptyDataFrame)((a, b) => a.withColumn(b, lit("anyStringValue")))
+    saDf
+}
+
+Title: Load CSV_SA
+%spark
+{
+
+    val tableName = "site_antenna_table"
+    
+    import com.nokia.ava.npo.datastorage.Cassandra
+    val fsu = com.nokia.ava.npo.spark.FileSystemUtil()
+    val pathToS3 = s"s3a://mwingzdata/networkdata/data_import_queue/SA"
+    val saFileList = fsu.globList(uri = pathToS3, recursive = false).toList
+    println(saFileList)
+    //val pathToS3 = s"s3a://mwingzdata/networkdata/data_import_queue/SA/Huawei_3_MASTER_All clusters_20230113_changed.csv"
+    val vendorPattern = """(Huawei|NOKIA)""".r
+    for (saFile <- saFileList) {    
+        println(s"Loading Agnostic data from $saFile")
+        val vendor = vendorPattern.findAllIn(saFile).toList.head
+
+        println(saFile + " : " + vendor)
+        try {
+            val saDf = vendor match {
+                case "NOKIA" => readNokiaSA_csv(saFile)
+                case "Huawei" => readHuaweiSA_csv(saFile)
+                case _ => emptyDF
+
+            }
+            println(s"reading SA sheet $vendor from $saFile suceeded")
+           // saDf.filter('cell_name.isNotNull).show(false)
+            saDf.show(10,false)
+            print(saDf.count)
+            
+            Cassandra
+                .withKeyspace("cass_db")
+                .save(saDf.filter('cell_name.isNotNull), tableName, Option(Seq("cell_name")))
+            
+            println(s"Ingestion SA from $saFile suceeded") 
+        } catch {
+            case e: Throwable => println(s"Error with file: $saFile, $e")
+        } 
+
+        println(s"Deleting SA from $saFile")
+        fsu.delete(saFile)
+
+    }
+
+}
+
+
+Title: Add cluster data from site_antenna_table to cm_data (MWINGZ)
+%spark
+{
+
+    import com.nokia.ava.npo.datastorage.Cassandra
+    import com.nokia.ava.npo.cm.RamlTransformation.selectParameters
+    
+    val ramlDf = Cassandra
+        .withKeyspace("cass_db")
+        .read("cm_data")
+ 
+    val btsDf1 = ramlDf.transform(selectParameters(
+        "BTS",
+        "moDistName as object_dn",
+        "name type string as cell_name"
+      ))
+      .select('moDistName, 'cell_name, 'object_type, 'moVendor, lit("GSM").as("technology")).filter('cell_name.isNotNull)
+   
+    val btsDf2 = ramlDf.transform(selectParameters(
+        "GSMCELL",
+        "moDistName as object_dn",
+        "cell_name type string as cell_name"
+      ))
+      .select('moDistName, 'cell_name, 'object_type, 'moVendor, lit("GSM").as("technology")).filter('cell_name.isNotNull)
+     
+    val btsDf = btsDf1.union(btsDf2) 
+    
+
+    // btsDf.filter('cell_name.isNotNull).count()
+ // println("GSM cells with name: " + btsDf.filter('cell_name.isNotNull).count)
+
+
+    val wcelDf1 = ramlDf.transform( selectParameters(
+        "WCEL",
+        "moDistName as object_dn",
+        "name type string as cell_name"
+        ))
+      .select('moDistName, 'cell_name, 'object_type , 'moVendor, lit("WCDMA").as("technology")).filter('cell_name.isNotNull)
+      
+    val wcelDf2 = ramlDf.transform( selectParameters(
+        "WCEL",
+        "moDistName as object_dn",
+        "cell_name type string as cell_name"
+        ))
+      .select('moDistName, 'cell_name, 'object_type , 'moVendor, lit("WCDMA").as("technology")).filter('cell_name.isNotNull)
+      
+    val wcelDf = wcelDf1.union(wcelDf2) 
+        
+//   wcelDf.filter('cell_name.isNull).show(10, false)
+//    println("WCDMA cells with name: " + wcelDf.filter('cell_name.isNotNull).count)
+
+    val lncelDf1 = ramlDf.transform( selectParameters(
+        "LNCEL",
+        "moDistName as object_dn",
+        "cellName type string as cell_name"
+      ))
+      .select('moDistName, 'cell_name, 'object_type,'moVendor, lit("LTE").as("technology")).filter('cell_name.isNotNull)
+     
+    val lncelDf2 = ramlDf.transform( selectParameters(
+        "LNCEL",
+        "moDistName as object_dn",
+         "cell_name type string as cell_name"
+      ))
+      .select('moDistName, 'cell_name, 'object_type,'moVendor, lit("LTE").as("technology")).filter('cell_name.isNotNull)
+      
+      val lncelDf = lncelDf1.union(lncelDf2) 
+   
+       
+
+//    lncelDf.filter('cell_name.isNull).show(10, false)
+ //  println("LTE cells with name: " + lncelDf.filter('cell_name.isNotNull).count)
+ 
+ 
+    val nrcellDf = ramlDf.transform( selectParameters(
+            "NRCELL",
+            "moDistName as object_dn",
+            "cellName as cell_name"
+      ))
+      .select('moDistName, 'cell_name, 'object_type,'moVendor, lit("NR").as("technology")).filter('cell_name.isNotNull)
+     
+    
+    
+//    nrcellDf.filter('cell_name.isNull).show(10, false)
+//   println("NR cells without name: " + nrcellDf.filter('cell_name.isNotNull).count)
+  
+//    val allCellDf = btsDf.union(wcelDf.union(lncelDf.union(nrcellDf))).select('moDistName, 'object_type , 'technology, 'cell_name).filter('cell_name.isNotNull && 'moDistName.isNotNull && 'technology.isNotNull)
+      val allCellDf = btsDf.union(wcelDf.union(lncelDf)).select('moDistName, 'object_type, 'cell_name).filter('cell_name.isNotNull && 'moDistName.isNotNull && 'object_type.isNotNull)
+//      val allCellDf = btsDf.union(wcelDf.union(lncelDf)).select('moDistName, 'object_type , 'technology, 'cell_name).filter('cell_name.isNotNull && 'moDistName.isNotNull && 'technology.isNotNull)
+//.na.drop("any")
+
+    val saDf = Cassandra
+        .withKeyspace("cass_db")
+        .read("site_antenna_table")
+        .drop("moDistName")
+        .drop("object_type")
+//      .where('vendor like "Nokia")
+//        .select('cell_name )
+
+
+    val allCellDfInCmWithSa = allCellDf.join(saDf, Seq("cell_name"), "left") // Update only lines already existing in SA table
+        .filter('cell_name.isNotNull && 'moDistName.isNotNull) // && 'technology.isNotNull) // ULo, 05012023:  temporary taken out technology null filter due to error
+
+//    val allCellDfInSa = saDf.join(allCellDf, Seq("cell_name"), "left") // Update only lines already existing in SA table
+//    .filter('cell_name.isNotNull && 'moDistName.isNotNull && 'technology.isNotNull)
+
+//    print(allCellDfInCmWithSa.count())
+   
+//    allCellDfInCmWithSa
+        //.filter("cluster_name IS NULL OR cluster_name LIKE 'CLUSTER_NAME' ")
+        //.filter('cell_name.like("BWROS31A091P"))
+//        .groupBy("vendor","technology").agg(countDistinct('moDistName))
+//        .orderBy('vendor,'technology)
+//         .show(30, false)
+
+
+
+    Cassandra
+        .withKeyspace("cass_db")
+        .save(allCellDfInCmWithSa, "cm_data", Option(Seq("moDistName")),  Option(Seq("object_type")))
+
+}
+
+Title: Parameter table functions per technology (Nokia) - new
+%spark
+
+    import org.apache.spark.sql.DataFrame
+
+  def gsmBtsParameterTable(cassandraKs: String): DataFrame = {
+    import com.nokia.ava.npo.cm.CmModule
+
+    import spark.implicits._
+
+    val cmDfBts = CmModule
+      .inCassandra(cassandraKs)
+      .readCm(
+        "BTS",
+        "moDistName as object_dn",
+        "PLMN_id type string as plmn_id",
+        "BSC_id type long as bsc_id",
+        "BCF_id type long as bcf_id",
+        "BTS_id type long as bts_id",
+        "BSC.name type string as bsc_name",
+        "BCF.name type string as bcf_name",
+        "nwName type string as bts_nw_name",
+        "name type string as bts_name",
+        "frequencyBandInUse type string as band",
+        "cellId type long as cid",
+        "locationAreaIdLAC type long as lac",
+        "rac type long as rac",
+        "$latitude",
+        "$longitude",
+        "$bearing",
+//        "$site_id", // Does not work due to _id conflict
+        "$site_name",
+        "$cluster_name",
+        "$sector",
+        "adminState type long"
+      ) // use lower case
+      //             .filter('adminState === 1)
+      .withColumnRenamed("uid", "suid")
+      .withColumn("latitude", when('latitude.isNull, 65.0).otherwise('latitude))
+      .withColumn("longitude", when('longitude.isNull, 25.0).otherwise('longitude))
+      .withColumn("bearing", when('bearing.isNull, 359.0).otherwise('bearing))
+//      .withColumn("site_id", when('$site_id.isNull, 'bcf_id).otherwise('$site_id))
+      .withColumn("site_name", when('site_name.isNull, 'bts_name).otherwise('site_name))
+      .withColumn("cluster_name", when('cluster_name.isNull, "CLUSTER_NAME").otherwise('cluster_name))
+      .withColumn("sector", when('sector.isNull, "SECTOR").otherwise('sector))
+      .select("suid",
+          "plmn_id",
+              "bsc_id",
+              "bcf_id",
+              "bts_id",
+              "bsc_name",
+              "bcf_name",
+              "bts_name",
+              "cid",
+              "band",
+              "lac",
+              "rac",
+              "object_dn",
+              "latitude",
+              "longitude",
+              "bearing",
+//            "site_id",
+            "site_name",
+            "cluster_name",
+            "sector"
+            )
+
+    val cmDfSwVersion = CmModule
+      .inCassandra(cassandraKs)
+      .readCm
+      .where("object_type = 'BTS' ")
+      .select('uid.as("suid"), 'moVersion.as("sw_version"), 'moVendor, 'site_id)
+
+    val cmDf =
+      cmDfBts.join(cmDfSwVersion, Seq("suid"), "left")
+        .withColumn("site_id", when('site_id.isNull, 'bcf_id).otherwise('site_id))
+
+
+// Add cell icon size based on number of cells per band 
+
+    import org.apache.spark.sql.functions._
+    import org.apache.spark.sql.expressions.Window
+    
+    val windowSpec  = Window.orderBy(col("cell_count").desc)
+    
+    val cellIconProperties = cmDf.groupBy('band).agg(count('band).as("cell_count"))
+        .withColumn("row_number",row_number().over(windowSpec))
+        .withColumn("cell_icon_width", expr("greatest(65 - row_number * 10, 15)"))
+        .withColumn("cell_icon_length", expr("0.19 + row_number * 0.03"))
+        .select('band, 'cell_icon_width, 'cell_icon_length)
+
+    cmDf.join(cellIconProperties, Seq("band"), "left")
+  }
+
+  def gsmTrxParameterTable(cassandraKs: String): DataFrame = {
+    import com.nokia.ava.npo.cm.CmModule
+
+    val cmDf = CmModule
+      .inCassandra(cassandraKs)
+      .readCm(
+        "TRX",
+        "moDistName as object_dn",
+        "initialFrequency"
+      ) // use lower case
+      .withColumnRenamed("uid", "suid")
+      .select("suid", "object_dn")
+
+    cmDf
+  }
+
+  /** Create WCDMA parameter dataframe */
+  def wcdmaCellParameterTable(cassandraKs: String): DataFrame = {
+    import com.nokia.ava.npo.cm.CmModule
+    import spark.implicits._
+
+    val cmDfWcel = CmModule
+      .inCassandra(cassandraKs)
+      .readCm(
+        "WCEL",
+        "moDistName as object_dn",
+        "PLMN_id type string as plmn_id",
+        "RNC_id type int as rnc_id",
+        "WBTS_id type int as wbts_id",
+        "WCEL_id type int as wcel_id",
+        "RNC.name type string as rnc_name",
+        "WBTS.WBTSName type string as wbts_name",
+        "name type string as wcel_name",
+        "CId type int as cid",
+        "LAC type int as lac",
+        "RAC type int as rac",
+        "SectorID type int as sector_id",
+        "UARFCN type int as carrier",
+        "$latitude",
+        "$longitude",
+        "$bearing",
+//        "$site_id",
+        "$site_name",
+        "$cluster_name",
+        "$sector",
+        "WCelState type long"
+      ) // use lower case
+      //              .filter('WCelState === 0)
+      .withColumnRenamed("uid", "suid")
+      .withColumn("latitude", when('latitude.isNull, 65.0).otherwise('latitude))
+      .withColumn("longitude", when('longitude.isNull, 25.0).otherwise('longitude))
+      .withColumn("bearing", when('bearing.isNull, 359.0).otherwise('bearing))
+//      .withColumn("site_id", when('$site_id.isNull, when('wbts_id.isNull, "SITE_ID").otherwise('wbts_id)).otherwise('$site_id))
+      .withColumn("site_name", when('site_name.isNull, when('wbts_name.isNull, "SITE_NAME").otherwise('wbts_name)).otherwise('site_name))
+      .withColumn("cluster_name", when('cluster_name.isNull, "CLUSTER_NAME").otherwise('cluster_name))
+      .withColumn("sector", when('sector.isNull, "SECTOR").otherwise('sector))
+      .select(
+        "suid",
+          "plmn_id",
+        "rnc_id",
+        "wbts_id",
+        "wcel_id",
+        "rnc_name",
+        "wbts_name",
+        "wcel_name",
+        "cid",
+        "lac",
+        "rac",
+        "sector_id",
+        "carrier",
+        "object_dn",
+        "latitude",
+        "longitude",
+        "bearing",
+//            "site_id",
+            "site_name",
+            "cluster_name",
+            "sector"
+      )
+
+    val cmDfSwVersion = CmModule
+      .inCassandra(cassandraKs)
+      .readCm
+      .where("object_type = 'WCEL' ")
+      .select('uid.as("suid"), 'moVersion.as("sw_version"), 'moVendor, 'site_id)
+
+    val cmDf =
+      cmDfWcel
+        .join(cmDfSwVersion, Seq("suid"), "left")
+        .withColumn("site_id", when('site_id.isNull, when('wbts_id.isNull, "SITE_ID").otherwise('wbts_id)).otherwise('site_id))
+
+// Add cell icon size based on number of cells per carrier 
+
+    import org.apache.spark.sql.functions._
+    import org.apache.spark.sql.expressions.Window
+    
+    val windowSpec  = Window.orderBy(col("cell_count").desc)
+    
+    val cellIconProperties = cmDf.groupBy('carrier).agg(count('carrier).as("cell_count"))
+        .withColumn("row_number",row_number().over(windowSpec))
+        .withColumn("cell_icon_width", expr("greatest(65 - row_number * 10, 15)"))
+        .withColumn("cell_icon_length", expr("0.19 + row_number * 0.03"))
+        .select('carrier, 'cell_icon_width, 'cell_icon_length)
+
+    cmDf.join(cellIconProperties, Seq("carrier"), "left")
+  }
+
+  /** Create LTE parameter dataframe */
+  def lteCellParameterTable(cassandraKs: String): DataFrame = {
+    import com.nokia.ava.npo.cm.CmModule
+    import spark.implicits._
+
+    val cmDfLncel = CmModule
+      .inCassandra(cassandraKs)
+      .readCm(
+        "LNCEL",
+        "moDistName as object_dn",
+        "PLMN_id type string as plmn_id",
+        "MRBTS_id type long as mrbts_id",
+        "LNBTS_id type long as lnbts_id",
+        "LNCEL_id type long as lncel_id",
+        "MRBTS.name type string as mrbts_name",
+        "LNBTS.enbName type string as lnbts_name",
+        "cellName type string as lncel_name",
+        "dlChBw type string as dl_channel_bw1",
+        "ulChBw type string as ul_channel_bw1",
+        "earfcnDL type string as carrier1",
+        "eutraCelId type long as cid",
+        "tac type long as tac",
+        "phyCellId type long as pci",
+        "$latitude",
+        "$longitude",
+        "$bearing",
+//        "$site_id",
+        "$site_name",
+        "$cluster_name",
+        "$sector",
+        "operationalState type long",
+        "expectedCellSize type long as cell_range"
+      )
+//      .filter('pci.isNotNull)
+      .withColumnRenamed("uid", "suid")
+      .withColumn("latitude", when('latitude.isNull, 65.0).otherwise('latitude))
+      .withColumn("longitude", when('longitude.isNull, 25.0).otherwise('longitude))
+      .withColumn("bearing", when('bearing.isNull, 359.0).otherwise('bearing))
+//      .withColumn("site_id", when('$site_id.isNull, when('mrbts_id.isNull, "SITE_ID").otherwise('mrbts_id)).otherwise('$site_id))
+      .withColumn("site_name", when('site_name.isNull, when('mrbts_name.isNull, "SITE_NAME").otherwise('mrbts_name)).otherwise('site_name))
+      .withColumn("cluster_name", when('cluster_name.isNull, "CLUSTER_NAME").otherwise('cluster_name))
+      .withColumn("sector", when('sector.isNull, "SECTOR").otherwise('sector))
+      .select(
+        "suid",
+          "plmn_id",
+        "mrbts_id",
+        "lnbts_id",
+        "lncel_id",
+        "mrbts_name",
+        "lnbts_name",
+        "lncel_name",
+        "cid",
+        "dl_channel_bw1",
+        "ul_channel_bw1",
+        "carrier1",
+        "pci",
+        "tac",
+        "object_dn",
+        "latitude",
+        "longitude",
+        "bearing",
+        "cell_range",
+//            "site_id",
+            "site_name",
+            "cluster_name",
+            "sector"
+      ) //, "sw_version")
+    //        .cache()
+
+    val cmDfLncelFdd = CmModule
+      .inCassandra(cassandraKs)
+      .readCm(
+        "LNCEL_FDD",
+        "LNBTS_id type long as lnbts_id",
+        "LNCEL_id type long as lncel_id",
+        "dlChBw type string as dl_channel_bw2",
+        "ulChBw type string as ul_channel_bw2",
+        "earfcnDL type string as carrier2"
+      )
+      .select('lnbts_id, 'lncel_id, 'dl_channel_bw2, 'ul_channel_bw2, 'carrier2)
+
+    val cmDfLncelTdd = CmModule
+      .inCassandra(cassandraKs)
+      .readCm(
+        "LNCEL_TDD",
+        "LNBTS_id type long as lnbts_id",
+        "LNCEL_id type long as lncel_id",
+        "chBw type string as dl_channel_bw2",
+        "chBw type string as ul_channel_bw2",
+        "earfcn type string as carrier2"
+      )
+      .select('lnbts_id, 'lncel_id, 'dl_channel_bw2, 'ul_channel_bw2, 'carrier2)
+
+    val cmDfLncelTddFdd = cmDfLncelTdd.union(cmDfLncelFdd)
+
+    val cmDfSwVersion = CmModule
+      .inCassandra(cassandraKs)
+      .readCm
+      .where("object_type = 'LNCEL' ")
+      .select('uid.as("suid"), 'moVersion.as("sw_version"), 'moVendor, 'site_id)
+
+    val cmDf =
+      cmDfLncel
+        .join(cmDfLncelTddFdd, Seq("lnbts_id", "lncel_id"), "left")
+        .withColumn("dl_channel_bw",
+                    when('dl_channel_bw1.isNotNull, 'dl_channel_bw1).otherwise(
+                      'dl_channel_bw2))
+        .withColumn("ul_channel_bw",
+                    when('ul_channel_bw1.isNotNull, 'ul_channel_bw1).otherwise(
+                      'ul_channel_bw2))
+        .withColumn("carrier",
+                    when('carrier1.isNotNull, 'carrier1).otherwise('carrier2))
+        .select(
+          "suid",
+          "plmn_id",
+          "mrbts_id",
+          "lnbts_id",
+          "lncel_id",
+          "mrbts_name",
+          "lnbts_name",
+          "lncel_name",
+          "cid",
+          "dl_channel_bw",
+          "ul_channel_bw",
+          "carrier",
+          "pci",
+          "tac",
+          "object_dn",
+          "latitude",
+          "longitude",
+          "bearing",
+            "site_name",
+            "cluster_name",
+            "sector"
+        )
+//        .filter('carrier.isNotNull)
+        .join(cmDfSwVersion, Seq("suid"), "left")
+        .withColumn("site_id", when('site_id.isNull, when('mrbts_id.isNull, "SITE_ID").otherwise('mrbts_id)).otherwise('site_id))
+
+        
+// Add cell icon size based on number of cells per carrier 
+
+    import org.apache.spark.sql.functions._
+    import org.apache.spark.sql.expressions.Window
+    
+    val windowSpec  = Window.orderBy(col("cell_count").desc)
+    
+    val cellIconProperties = cmDf.groupBy('carrier).agg(count('carrier).as("cell_count"))
+        .withColumn("row_number",row_number().over(windowSpec))
+        .withColumn("cell_icon_width", expr("greatest(65 - row_number * 10, 15)"))
+        .withColumn("cell_icon_length", expr("0.19 + row_number * 0.03"))
+        .select('carrier, 'cell_icon_width, 'cell_icon_length)
+
+    cmDf.join(cellIconProperties, Seq("carrier"), "left")
+  }
+
+  def nrCellParameterTable(cassandraKs: String): DataFrame = {
+    import com.nokia.ava.npo.cm.CmModule
+    import spark.implicits._
+
+    val cmDfNrCell = CmModule
+        .inCassandra(cassandraKs)
+        .readCm(
+            "NRCELL",
+            "moDistName as object_dn",
+            "PLMN_id type string as plmn_id",
+            "MRBTS_id type long as mrbts_id",
+            "NRBTS_id type long as nrbts_id",
+            "NRCELL_id type long as nrcell_id",
+            "MRBTS.name as mrbts_name",
+            "NRBTS.name as nrbts_name",
+            "name as nrcell_name",
+//            "freqBandIndicatorNR type int as frequency_band",
+            "chBw type int as channel_bandwidth",
+            "nrarfcn type int as carrier",
+//            "gscn type int as gscn",
+//            "ssbScs type int as ss_scs",
+            "physCellId type int as pci",
+//            "tddFrameStructure{} as tdd_frame_structure",
+//            "tddFrameStructure{}['frameStructureType'] as ul_dl_data_slot_ratio",
+//            "frameStructureType type int as frame_structure_type",
+            "$latitude",
+            "$longitude",
+            "$bearing",
+//            "$site_id",
+            "$site_name",
+            "$cluster_name",
+            "$sector",
+            "tac type int as tac",
+            "nrCellIdentity type long as cid"
+        )
+        .withColumnRenamed("uid", "suid")
+      .withColumn("latitude", when('latitude.isNull, 65.0).otherwise('latitude))
+      .withColumn("longitude", when('longitude.isNull, 25.0).otherwise('longitude))
+      .withColumn("bearing", when('bearing.isNull, 359.0).otherwise('bearing))
+//      .withColumn("site_id", when('$site_id.isNull, when('mrbts_id.isNull, "SITE_ID").otherwise('mrbts_id)).otherwise('$site_id))
+      .withColumn("site_name", when('site_name.isNull, when('mrbts_name.isNull, "SITE_NAME").otherwise('mrbts_name)).otherwise('site_name))
+      .withColumn("cluster_name", when('cluster_name.isNull, "CLUSTER_NAME").otherwise('cluster_name))
+      .withColumn("sector", when('sector.isNull, "SECTOR").otherwise('sector))
+      .select(
+        "suid",
+         "plmn_id",
+        "mrbts_id",
+        "nrbts_id",
+        "nrcell_id",
+        "mrbts_name",
+        "nrbts_name",
+        "nrcell_name",
+        "cid",
+        "channel_bandwidth",
+        "carrier",
+        "pci",
+        "tac",
+        "object_dn",
+        "latitude",
+        "longitude",
+        "bearing",
+//        "cell_range",
+//            "site_id",
+            "site_name",
+            "cluster_name",
+            "sector"
+      )      
+
+    val cmDfSwVersion = CmModule
+      .inCassandra(cassandraKs)
+      .readCm
+      .where("object_type = 'NRCELL' ")
+      .select('uid.as("suid"), 'moVersion.as("sw_version"), 'moVendor, 'site_id)
+
+    val cmDf = cmDfNrCell
+        .join(cmDfSwVersion, Seq("suid"), "left")
+        .withColumn("site_id", when('site_id.isNull, when('mrbts_id.isNull, "SITE_ID").otherwise('mrbts_id)).otherwise('site_id))
+    
+    // Add cell icon size based on number of cells per carrier 
+
+    import org.apache.spark.sql.functions._
+    import org.apache.spark.sql.expressions.Window
+    
+    val windowSpec  = Window.orderBy(col("cell_count").desc)
+    
+    val cellIconProperties = cmDf.groupBy('carrier).agg(count('carrier).as("cell_count"))
+        .withColumn("row_number",row_number().over(windowSpec))
+        .withColumn("cell_icon_width", expr("greatest(65 - row_number * 10, 15)"))
+        .withColumn("cell_icon_length", expr("0.19 + row_number * 0.03"))
+        .select('carrier, 'cell_icon_width, 'cell_icon_length)
+
+    cmDf.join(cellIconProperties, Seq("carrier"), "left")
+}
+
+Title: Multitech table  (Nokia) - new
+%spark
+    import org.apache.spark.sql.DataFrame
+
+
+  def multitechParameterTable(cassandraKs: String): DataFrame = {
+//    val spark = builder().getOrCreate()
+    import spark.implicits._
+
+    val cmDfBts = 
+        gsmBtsParameterTable(cassandraKs)
+      .select(
+        'suid,
+        'object_dn,
+        'band.as("carrier"),
+        'plmn_id,
+        'bsc_id.as("controller_id"),
+        'bcf_id.as("basestation_id"), // can also be extracted from BCF.SBTSId
+        'bts_id.as("cell_id"),
+        'bsc_name.as("controller_name"),
+        concat('bsc_id, lit("_"), 'bcf_id).as("basestation_name"),
+        'bts_name.as("cell_name"),
+        'cid,
+        'lac.as("area_code"),
+        lit(null).as("active_status"),
+        concat('lac, lit("|"), 'cid).as("lacci"),
+        lit(null).as("rncci"),
+        lit("GSM").as("technology"),
+        'latitude,
+        'longitude,
+        'bearing,
+        'site_id,
+        'site_name,
+        'cluster_name,
+        'sector,
+        'cell_icon_width, 
+        'cell_icon_length,
+        lit(0.2).as("channel_bandwidth")
+      )
+        .select('suid, 'object_dn, 'carrier, 'plmn_id, 'controller_id, 'basestation_id, 'cell_id, 'controller_name, 'basestation_name, 'cell_name, 'cid, 'area_code, 'technology, 'lacci, 'rncci, 'latitude, 'longitude, 'bearing, 'site_id, 'site_name, 'cluster_name, 'sector, 'active_status, 'cell_icon_width, 'cell_icon_length, 'channel_bandwidth)
+
+    val cmDfWcel = 
+        wcdmaCellParameterTable(cassandraKs)
+      .select(
+        'suid,
+        'object_dn,
+        'carrier,
+        'plmn_id,
+        'rnc_id.as("controller_id"),
+        'wbts_id.as("basestation_id"), // can also be extracted from WBTS.SBTSId
+        'wcel_id.as("cell_id"),
+        'rnc_name.as("controller_name"),
+        'wbts_name.as("basestation_name"),
+        'wcel_name.as("cell_name"),
+        'cid,
+        'lac.as("area_code"),
+        lit(null).as("active_status"),
+        lit("WCDMA").as("technology"),
+        concat('lac, lit("|"), 'cid).as("lacci"),
+        concat('rnc_id, lit("|"), 'cid).as("rncci"),
+        'latitude,
+        'longitude,
+        'bearing,
+        'site_id,
+        'site_name,
+        'cluster_name,
+        'sector,
+        'cell_icon_width, 
+        'cell_icon_length,
+        lit(3.8).as("channel_bandwidth")
+      )
+        .select('suid, 'object_dn, 'carrier, 'plmn_id, 'controller_id, 'basestation_id, 'cell_id, 'controller_name, 'basestation_name, 'cell_name, 'cid, 'area_code, 'technology, 'lacci, 'rncci, 'latitude, 'longitude, 'bearing, 'site_id, 'site_name, 'cluster_name, 'sector, 'active_status, 'cell_icon_width, 'cell_icon_length, 'channel_bandwidth)
+
+    val cmDfLncel = 
+        lteCellParameterTable(cassandraKs)
+      .select(
+        'suid,
+        'object_dn,
+        'carrier,
+        'plmn_id,
+        'mrbts_id.as("controller_id"),
+        'lnbts_id.as("basestation_id"), // should be also mrbts_id?
+        'lncel_id.as("cell_id"),
+        'mrbts_name.as("controller_name"),
+        'lnbts_name.as("basestation_name"),
+        'lncel_name.as("cell_name"),
+        'cid,
+        'tac.as("area_code"),
+        lit(null).as("active_status"),
+        lit("LTE").as("technology"),
+        lit(null).as("lacci"),
+        lit(null).as("rncci"),
+        'latitude,
+        'longitude,
+        'bearing,
+        'site_id,
+        'site_name,
+        'cluster_name,
+        'sector,
+        'cell_icon_width, 
+        'cell_icon_length,
+        expr("dl_channel_bw / 10.0").as("channel_bandwidth")
+      )
+        .select('suid, 'object_dn, 'carrier, 'plmn_id, 'controller_id, 'basestation_id, 'cell_id, 'controller_name, 'basestation_name, 'cell_name, 'cid, 'area_code, 'technology, 'lacci, 'rncci, 'latitude, 'longitude, 'bearing, 'site_id, 'site_name, 'cluster_name, 'sector, 'active_status, 'cell_icon_width, 'cell_icon_length, 'channel_bandwidth)
+
+    val cmDfNrcell = 
+        nrCellParameterTable(cassandraKs)
+        .select(
+            'suid, 
+            'object_dn, 
+            'carrier, 
+            'plmn_id,
+            'mrbts_id.as("controller_id"), 
+            'nrbts_id.as("basestation_id"), 
+            'nrcell_id.as("cell_id"), 
+            'mrbts_name.as("controller_name"),
+            'nrbts_name.as("basestation_name"),
+            'nrcell_name.as("cell_name"),
+            'cid, 
+            'tac.as("area_code"), 
+            lit(null).as("active_status"),
+            lit("NR").as("technology"),
+            lit(null).as("lacci"),
+            lit(null).as("rncci"),
+            'latitude, 
+            'longitude, 
+            'bearing,
+            'site_id,
+            'site_name,
+            'cluster_name,
+            'sector,
+        'cell_icon_width, 
+        'cell_icon_length,
+        'channel_bandwidth.cast("double")
+            )
+//        .select('suid, 'object_dn, 'latitude, 'longitude, 'bearing, 'carrier, 'controller_id, 'basestation_id, 'cell_id, 'controller_name, 'basestation_name, 'cell_name, 'cid, 'area_code, 'technology, lit(null).as("lacci"), lit(null).as("rncci"))
+        .select('suid, 'object_dn, 'carrier, 'plmn_id, 'controller_id, 'basestation_id, 'cell_id, 'controller_name, 'basestation_name, 'cell_name, 'cid, 'area_code, 'technology, 'lacci, 'rncci, 'latitude, 'longitude, 'bearing, 'site_id, 'site_name, 'cluster_name, 'sector, 'active_status, 'cell_icon_width, 'cell_icon_length, 'channel_bandwidth)
+
+    cmDfBts
+      .union(cmDfWcel)
+      .union(cmDfLncel)
+      .union(cmDfNrcell)
+
+  }
+
+Title: CM cell info table to Cassandra - Nokia
+%spark
+{
+
+    import com.nokia.ava.npo.datastorage.Cassandra
+
+
+    val cmDf = Cassandra
+        .withKeyspace("cass_db")
+        .read("cm_data")
+        .select("uid", "ramlTimeStamp", "48h_follow_up", "delay_site", "excluded_cell", "operator", "scope", "swap_date", "siteid")
+        .withColumnRenamed("ramlTimeStamp","update_time")
+        .withColumnRenamed("uid", "suid")
+        
+    import com.nokia.ava.npo.cm.CmModule
+
+    val saDf = multitechParameterTable(cassandraKs  = "cass_db")
+        .select('suid, 'object_dn.as("distName"), 'latitude, 'longitude, 'bearing.as("azimuth"), 'carrier, 'cell_name, 'technology, concat('basestation_name, lit("_"), coalesce('bearing, lit(666)).cast("int")).as("sector_bts"), 'controller_name, 'basestation_name, 'plmn_id, 'controller_id, 'basestation_id, 'cell_id, 'cid, 'area_code, 'lacci, 'rncci, 'cluster_name, 'sector, 'active_status, 'site_id, 'site_name, 'cell_icon_width, 'cell_icon_length, 'channel_bandwidth)
+        .join(cmDf, Seq("suid")) // Add SA columns that not already included
+        .withColumn("partition_time", to_timestamp(lit("2000-01-01 00 00 00"),"yyyy-MM-dd HH mm ss"))
+        .withColumn("parentDistName", regexp_extract(col("distName"), ".*(?=\\/)", 0))
+        .withColumn("site_name", when(col("siteid").isNotNull, col("siteid")).otherwise(col("site_name")))
+        .withColumn("site_id", when(col("siteid").isNotNull, col("siteid")).otherwise(col("site_id")))
+        .drop("suid")
+        .withColumn("vendor", lit("Nokia"))
+        .withColumn("controller_cell_id", concat('controller_id, lit("_"), 'cell_id)) // required for GSM BSC+Segment 
+        .withColumn("cell_name", when(col("cell_name").isNull, lit("name_null")).otherwise(col("cell_name")))
+        .withColumn("controller_name", when(col("controller_name").isNull, col("basestation_name")).otherwise(col("controller_name")))
+        .withColumn("active_status", when(col("active_status").isNull, lit("NA")).otherwise(col("active_status")))
+        .filter("distName IS NOT NULL")
+//      .filter("LENGTH(distName) > 10")
+       // .filter(!'controller_name.like("%_DR_%")) // ULo, 05012023: remove filter to check if we can get PM data during DR homing 
+//       .filter('site_id.like("LGMDR"))
+
+//    saDf.show(30, false)
+
+    println("GSM")
+    Cassandra
+        .withKeyspace("cass_db")
+        .save(saDf.filter("technology ='GSM'"), "cm_cell_info_table", Option(Seq("distName")))
+    println("WCDMA")
+    Cassandra
+        .withKeyspace("cass_db")
+        .save(saDf.filter("technology =='WCDMA'"), "cm_cell_info_table", Option(Seq("distName")))
+        println("LTE")
+    Cassandra
+        .withKeyspace("cass_db")
+        .save(saDf.filter("technology =='LTE'"), "cm_cell_info_table", Option(Seq("distName")))
+        println("NR")
+    Cassandra
+        .withKeyspace("cass_db")
+        .save(saDf.filter("technology =='NR'"), "cm_cell_info_table", Option(Seq("distName")))
+  
+}
+
+Title: Parameter table functions per technology (Huawei)
+%spark
+
+// See http://npo-doc.eecloud.dynamic.nsn-net.net:8080/com.nokia.ava.npo/cdf-core_2.11/2.0.2/javadoc/index.html#paradox.cm.index
+
+    import org.apache.spark.sql.DataFrame
+
+  def gsmBtsParameterTableHuawei(cassandraKs: String): DataFrame = {
+    import com.nokia.ava.npo.cm.CmModule
+
+    import spark.implicits._
+
+    val cmDfBts = CmModule
+      .inCassandra(cassandraKs)
+      .readCm(
+        "GSMCELL",
+        "moDistName as object_dn",
+        "PLMN_id type string as plmn_id",
+        "BSC_id type string as bsc_id",
+        "BCF_id type string as bcf_id",
+        "BTS_id type string as bts_id",
+        "operator_name",
+        "bsc_name",
+        "bts_name",
+        "cell_name",
+        "bcch_frequency",
+        "cellci type long as cid",
+        "location_area_code type long as lac",
+        "routing_area_code type long as rac",
+        "active_status",
+        "$latitude",
+        "$longitude",
+        "$bearing",
+//        "$site_id",
+        "$site_name",
+        "$cluster_name",
+        "$sector",
+        "adminState type long"
+      ) // use lower case
+      //             .filter('adminState === 1)
+      .withColumnRenamed("uid", "suid")
+      .withColumn("latitude", when('latitude.isNull, 65.0).otherwise('latitude))
+      .withColumn("longitude", when('longitude.isNull, 25.0).otherwise('longitude))
+      .withColumn("bearing", when('bearing.isNull, 359.0).otherwise('bearing))
+//      .withColumn("site_id", when('$site_id.isNull, 'bcf_id).otherwise('$site_id))
+      .withColumn("site_name", when('site_name.isNull, 'bts_name).otherwise('site_name))
+      .withColumn("cluster_name", when('cluster_name.isNull, "CLUSTER_NAME").otherwise('cluster_name))
+      .withColumn("sector", when('sector.isNull, "SECTOR").otherwise('sector))
+      .select("suid",
+              "plmn_id",
+              "bsc_id",
+              "bcf_id",
+              "bts_id",
+              "bsc_name",
+              "bts_name",
+              "cell_name",
+              "cid",
+              "lac",
+              "rac",
+              "active_status",
+              "bcch_frequency",
+              "object_dn",
+              "latitude",
+              "longitude",
+              "bearing",
+//              "site_id",
+              "site_name",
+              "cluster_name",
+              "sector"
+              )
+
+    val cmDfSwVersion = CmModule
+      .inCassandra(cassandraKs)
+      .readCm
+      .where("object_type = 'GSMCELL' ")
+      .select('uid.as("suid"), 'moVersion.as("sw_version"), 'moVendor, 'site_id)
+
+    val cmDf =
+      cmDfBts.join(cmDfSwVersion, Seq("suid"), "left")
+      .withColumn("site_id", when('site_id.isNull, 'bcf_id).otherwise('site_id))
+      .filter("moVendor = 'Huawei'")
+
+    cmDf.createOrReplaceTempView("cell_param_data")
+
+    val cellIconProperties = spark.sql(
+      """
+        select
+            greatest(65 - (ROW_NUMBER() OVER(ORDER BY cell_count DESC)) * 10, 15) AS cell_icon_width,
+            0.19 + (ROW_NUMBER() OVER(ORDER BY cell_count DESC)) * 0.03 AS cell_icon_length,
+            bcch_frequency
+        from (
+            select bcch_frequency, count(bcch_frequency) cell_count
+        from cell_param_data
+        group by bcch_frequency)
+        """)
+
+    cmDf.join(cellIconProperties, Seq("bcch_frequency"), "left")
+  }
+
+  /** Create WCDMA parameter dataframe */
+  def wcdmaCellParameterTableHuawei(cassandraKs: String): DataFrame = {
+    import com.nokia.ava.npo.cm.CmModule
+    import spark.implicits._
+
+    val cmDfWcel = CmModule
+      .inCassandra(cassandraKs)
+      .readCm(
+        "WCEL",
+        "moDistName as object_dn",
+        "PLMN_id type string as plmn_id",
+        "RNC_id type string as rnc_id",
+        "WBTS_id type string as wbts_id",
+        "WCEL_id type string as wcel_id",
+        "rnc_name",
+        "nodeb_name type string as wbts_name",
+        "cell_name type string as wcel_name",
+        "cellid type int as cid",
+        "location_area_code type int as lac",
+        "routing_area_code type int as rac",
+        "service_area_code type int as sac",
+        "downlink_uarfcn type int as carrier",
+        "active_status",
+        "$latitude",
+        "$longitude",
+        "$bearing",
+//        "$site_id",
+        "$site_name",
+        "$cluster_name",
+        "$sector",
+        "WCelState type long"
+      ) // use lower case
+      //              .filter('WCelState === 0)
+      .withColumn("latitude", when('latitude.isNull, 65.0).otherwise('latitude))
+      .withColumn("longitude", when('longitude.isNull, 25.0).otherwise('longitude))
+      .withColumn("bearing", when('bearing.isNull, 359.0).otherwise('bearing))
+//      .withColumn("site_id", when('$site_id.isNull, when('wbts_id.isNull, "SITE_ID").otherwise('wbts_id)).otherwise('$site_id))
+      .withColumn("site_name", when('site_name.isNull, when('wbts_name.isNull, "SITE_NAME").otherwise('wbts_name)).otherwise('site_name))
+      .withColumn("cluster_name", when('cluster_name.isNull, "CLUSTER_NAME").otherwise('cluster_name))
+      .withColumn("sector", when('sector.isNull, "SECTOR").otherwise('sector))
+      .withColumnRenamed("uid", "suid")
+      .select(
+        "suid",
+        "plmn_id",
+        "rnc_id",
+        "wbts_id",
+        "wcel_id",
+        "rnc_name",
+        "wbts_name",
+        "wcel_name",
+        "cid",
+        "lac",
+        "rac",
+        "carrier",
+        "active_status",
+        "object_dn",
+        "latitude",
+        "longitude",
+        "bearing",
+//        "site_id",
+        "site_name",
+        "cluster_name",
+        "sector"
+      )
+
+    val cmDfSwVersion = CmModule
+      .inCassandra(cassandraKs)
+      .readCm
+      .where("object_type = 'WCEL' ")
+      .select('uid.as("suid"), 'moVersion.as("sw_version"), 'moVendor, 'site_id)
+
+    val cmDf =
+      cmDfWcel
+        .join(cmDfSwVersion, Seq("suid"), "left")
+        .withColumn("site_id", when('site_id.isNull, when('wbts_id.isNull, "SITE_ID").otherwise('wbts_id)).otherwise('site_id))
+        .filter("moVendor LIKE 'Huawei' ")
+
+    cmDf.createOrReplaceTempView("cell_param_data")
+
+    val cellIconProperties = spark.sql(
+      """
+        select
+            greatest(65 - (ROW_NUMBER() OVER(ORDER BY cell_count DESC)) * 10, 15) AS cell_icon_width,
+            0.19 + (ROW_NUMBER() OVER(ORDER BY cell_count DESC)) * 0.03 AS cell_icon_length,
+            carrier
+        from (
+            select carrier, count(carrier) cell_count
+        from cell_param_data
+        group by carrier)
+        """)
+
+    cmDf.join(cellIconProperties, Seq("carrier"), "left")
+  }
+
+  /** Create LTE parameter dataframe */
+  def lteCellParameterTableHuawei(cassandraKs: String): DataFrame = {
+    import com.nokia.ava.npo.cm.CmModule
+    import spark.implicits._
+
+    val cmDfLncel = CmModule
+      .inCassandra(cassandraKs)
+      .readCm(
+        "LNCEL",
+        "moDistName as object_dn",
+        "PLMN_id type string as plmn_id",
+        "MRBTS_id type long as mrbts_id",
+        "LNBTS_id type long as lnbts_id",
+        "LNCEL_id type long as lncel_id",
+        "ne_name type string as mrbts_name",
+        "ne_name type string as lnbts_name",
+        "cell_name type string as lncel_name",
+        "downlink_bandwidth type string as dl_channel_bw",
+        "uplink_bandwidth type string as ul_channel_bw",
+        "downlink_earfcn type string as carrier",
+        "cellid type long as cid",
+        "tracking_area_code type long as tac",
+        "physical_cellid type long as pci",
+        "cell_active_state as active_status",
+        "$latitude",
+        "$longitude",
+        "$bearing",
+//        "$site_id",
+        "$site_name",
+        "$cluster_name",
+        "$sector",
+        "operationalState type long",
+        "expectedCellSize type long as expected_cell_size"
+      )
+//      .filter('pci.isNotNull)
+      .withColumnRenamed("uid", "suid")
+      .withColumn("latitude", when('latitude.isNull, 65.0).otherwise('latitude))
+      .withColumn("longitude", when('longitude.isNull, 25.0).otherwise('longitude))
+      .withColumn("bearing", when('bearing.isNull, 359.0).otherwise('bearing))
+//      .withColumn("site_id", when('$site_id.isNull, when('mrbts_id.isNull, "SITE_ID").otherwise('mrbts_id)).otherwise('$site_id))
+      .withColumn("site_name", when('site_name.isNull, when('mrbts_name.isNull, "SITE_NAME").otherwise('mrbts_name)).otherwise('site_name))
+      .withColumn("cluster_name", when('cluster_name.isNull, "CLUSTER_NAME").otherwise('cluster_name))
+      .withColumn("sector", when('sector.isNull, "SECTOR").otherwise('sector))
+      .select(
+        "suid",
+        "mrbts_id",
+        "lnbts_id",
+        "lncel_id",
+        "plmn_id",
+        "mrbts_name",
+        "lnbts_name",
+        "lncel_name",
+        "cid",
+        "dl_channel_bw",
+        "ul_channel_bw",
+        "carrier",
+        "pci",
+        "tac",
+        "object_dn",
+        "latitude",
+        "longitude",
+        "bearing",
+//        "site_id",
+        "site_name",
+        "cluster_name",
+        "sector",
+        "expected_cell_size",
+        "active_status"
+      ) //, "sw_version")
+    //        .cache()
+
+    val cmDfSwVersion = CmModule
+      .inCassandra(cassandraKs)
+      .readCm
+      .where("object_type = 'LNCEL' ")
+      .select('uid.as("suid"), 'moVersion.as("sw_version"), 'moVendor, 'site_id)
+
+    val cmDf =
+      cmDfLncel
+        .select(
+          "suid",
+          "plmn_id",
+          "mrbts_id",
+          "lnbts_id",
+          "lncel_id",
+          "mrbts_name",
+          "lnbts_name",
+          "lncel_name",
+          "cid",
+          "dl_channel_bw",
+          "ul_channel_bw",
+          "carrier",
+          "pci",
+          "tac",
+          "object_dn",
+          "latitude",
+          "longitude",
+          "bearing",
+//          "site_id",
+          "site_name",
+          "cluster_name",
+          "sector",
+          "expected_cell_size",
+          "active_status"
+        )
+//        .filter('carrier.isNotNull)
+        .join(cmDfSwVersion, Seq("suid"), "left")
+        .withColumn("site_id", when('site_id.isNull, when('mrbts_id.isNull, "SITE_ID").otherwise('mrbts_id)).otherwise('site_id))
+        .filter("moVendor LIKE 'Huawei' ")
+
+    cmDf.createOrReplaceTempView("cell_param_data")
+
+    val cellIconProperties = spark.sql(
+      """
+        select
+            greatest(65 - (ROW_NUMBER() OVER(ORDER BY cell_count DESC)) * 10, 15) AS cell_icon_width,
+            0.19 + (ROW_NUMBER() OVER(ORDER BY cell_count DESC)) * 0.03 AS cell_icon_length,
+            carrier
+        from (
+            select carrier, count(carrier) cell_count
+        from cell_param_data
+        group by carrier)
+        """)
+
+    cmDf.join(cellIconProperties, Seq("carrier"), "left")
+          .filter("moVendor LIKE 'Huawei' ")
+  }
+
+  def nrCellParameterTableHuawei(cassandraKs: String): DataFrame = {
+    import com.nokia.ava.npo.cm.CmModule
+    import spark.implicits._
+
+    val cmNrCell = CmModule
+        .inCassandra(cassandraKs)
+        .readCm(
+            "NRCELL",
+            "moDistName as object_dn",
+            "PLMN_id type string as plmn_id",
+            "MRBTS_id type string as mrbts_id",
+            "NRBTS_id type string as nrbts_id",
+            "NRCELL_id type long as nrcell_id",
+            "ne_name as mrbts_name",
+            "ne_name as nrbts_name",
+            "nr_du_cell_name as cell_name",
+//            "freqBandIndicatorNR type int as frequency_band",
+//            "chBw type int as channel_bandwidth",
+            "downlink_narfcn type int as carrier",
+            "nr_du_cell_activate_state as active_status",
+//            "gscn type int as gscn",
+//            "ssbScs type int as ss_scs",
+            "physical_cellid type int as pci",
+//            "tddFrameStructure{} as tdd_frame_structure",
+//            "tddFrameStructure{}['frameStructureType'] as ul_dl_data_slot_ratio",
+//            "frameStructureType type int as frame_structure_type",
+            "$latitude",
+            "$longitude",
+            "$bearing",
+//            "$site_id",
+            "$site_name",
+            "$cluster_name",
+            "$sector",
+            "tac type int as tac",
+            "nr_cellid type long as cid"
+        ) // "physical_cellid", "frequency_band", "uplink_narfcn", "downlink_narfcn"
+        .withColumnRenamed("uid", "suid")
+      .withColumn("latitude", when('latitude.isNull, 65.0).otherwise('latitude))
+      .withColumn("longitude", when('longitude.isNull, 25.0).otherwise('longitude))
+      .withColumn("bearing", when('bearing.isNull, 359.0).otherwise('bearing))
+//      .withColumn("site_id", when('$site_id.isNull, when('mrbts_id.isNull, "SITE_ID").otherwise('mrbts_id)).otherwise('$site_id))
+      .withColumn("site_name", when('site_name.isNull, when('mrbts_name.isNull, "SITE_NAME").otherwise('mrbts_name)).otherwise('site_name))
+      .withColumn("cluster_name", when('cluster_name.isNull, "CLUSTER_NAME").otherwise('cluster_name))
+      .withColumn("sector", when('sector.isNull, "SECTOR").otherwise('sector))
+      .select(
+        "suid",
+        "mrbts_id",
+        "nrbts_id",
+        "nrcell_id",
+        "plmn_id",
+        "mrbts_name",
+        "nrbts_name",
+        "cell_name",
+        "cid",
+        "carrier",
+        "pci",
+        "object_dn",
+        "latitude",
+        "longitude",
+        "bearing",
+//        "site_id",
+        "site_name",
+        "cluster_name",
+        "sector",
+        "tac",
+        "active_status"
+      )
+
+    val cmDfSwVersion = CmModule
+      .inCassandra(cassandraKs)
+      .readCm
+      .where("object_type = 'NRCELL' ")
+      .select('uid.as("suid"), 'moVersion.as("sw_version"), 'moVendor, 'site_id)
+      
+      val cmDf = cmNrCell
+         .join(cmDfSwVersion, Seq("suid"), "left")
+        .withColumn("site_id", when('site_id.isNull, when('mrbts_id.isNull, "SITE_ID").otherwise('mrbts_id)).otherwise('site_id))
+        .filter("moVendor LIKE 'Huawei' ")
+     
+      cmDf
+}
+
+Title: Parameter table functions per technology (Huawei)
+%spark
+
+// See http://npo-doc.eecloud.dynamic.nsn-net.net:8080/com.nokia.ava.npo/cdf-core_2.11/2.0.2/javadoc/index.html#paradox.cm.index
+
+    import org.apache.spark.sql.DataFrame
+
+  def gsmBtsParameterTableHuawei(cassandraKs: String): DataFrame = {
+    import com.nokia.ava.npo.cm.CmModule
+
+    import spark.implicits._
+
+    val cmDfBts = CmModule
+      .inCassandra(cassandraKs)
+      .readCm(
+        "GSMCELL",
+        "moDistName as object_dn",
+        "PLMN_id type string as plmn_id",
+        "BSC_id type string as bsc_id",
+        "BCF_id type string as bcf_id",
+        "BTS_id type string as bts_id",
+        "operator_name",
+        "bsc_name",
+        "bts_name",
+        "cell_name",
+        "bcch_frequency",
+        "cellci type long as cid",
+        "location_area_code type long as lac",
+        "routing_area_code type long as rac",
+        "active_status",
+        "$latitude",
+        "$longitude",
+        "$bearing",
+//        "$site_id",
+        "$site_name",
+        "$cluster_name",
+        "$sector",
+        "adminState type long"
+      ) // use lower case
+      //             .filter('adminState === 1)
+      .withColumnRenamed("uid", "suid")
+      .withColumn("latitude", when('latitude.isNull, 65.0).otherwise('latitude))
+      .withColumn("longitude", when('longitude.isNull, 25.0).otherwise('longitude))
+      .withColumn("bearing", when('bearing.isNull, 359.0).otherwise('bearing))
+//      .withColumn("site_id", when('$site_id.isNull, 'bcf_id).otherwise('$site_id))
+      .withColumn("site_name", when('site_name.isNull, 'bts_name).otherwise('site_name))
+      .withColumn("cluster_name", when('cluster_name.isNull, "CLUSTER_NAME").otherwise('cluster_name))
+      .withColumn("sector", when('sector.isNull, "SECTOR").otherwise('sector))
+      .select("suid",
+              "plmn_id",
+              "bsc_id",
+              "bcf_id",
+              "bts_id",
+              "bsc_name",
+              "bts_name",
+              "cell_name",
+              "cid",
+              "lac",
+              "rac",
+              "active_status",
+              "bcch_frequency",
+              "object_dn",
+              "latitude",
+              "longitude",
+              "bearing",
+//              "site_id",
+              "site_name",
+              "cluster_name",
+              "sector"
+              )
+
+    val cmDfSwVersion = CmModule
+      .inCassandra(cassandraKs)
+      .readCm
+      .where("object_type = 'GSMCELL' ")
+      .select('uid.as("suid"), 'moVersion.as("sw_version"), 'moVendor, 'site_id)
+
+    val cmDf =
+      cmDfBts.join(cmDfSwVersion, Seq("suid"), "left")
+      .withColumn("site_id", when('site_id.isNull, 'bcf_id).otherwise('site_id))
+      .filter("moVendor = 'Huawei'")
+
+// Add cell icon size based on number of cells per band 
+
+    import org.apache.spark.sql.functions._
+    import org.apache.spark.sql.expressions.Window
+    
+    val windowSpec  = Window.orderBy(col("cell_count").desc)
+    
+    val cellIconProperties = cmDf.groupBy('bcch_frequency).agg(count('bcch_frequency).as("cell_count"))
+        .withColumn("row_number",row_number().over(windowSpec))
+        .withColumn("cell_icon_width", expr("greatest(65 - row_number * 10, 15)"))
+        .withColumn("cell_icon_length", expr("0.19 + row_number * 0.03"))
+        .select('bcch_frequency, 'cell_icon_width, 'cell_icon_length)
+
+    cmDf.join(cellIconProperties, Seq("bcch_frequency"), "left")
+  }
+
+  /** Create WCDMA parameter dataframe */
+  def wcdmaCellParameterTableHuawei(cassandraKs: String): DataFrame = {
+    import com.nokia.ava.npo.cm.CmModule
+    import spark.implicits._
+
+    val cmDfWcel = CmModule
+      .inCassandra(cassandraKs)
+      .readCm(
+        "WCEL",
+        "moDistName as object_dn",
+        "PLMN_id type string as plmn_id",
+        "RNC_id type string as rnc_id",
+        "WBTS_id type string as wbts_id",
+        "WCEL_id type string as wcel_id",
+        "rnc_name",
+        "nodeb_name type string as wbts_name",
+        "cell_name type string as wcel_name",
+        "cellid type int as cid",
+        "location_area_code type int as lac",
+        "routing_area_code type int as rac",
+        "service_area_code type int as sac",
+        "downlink_uarfcn type int as carrier",
+        "active_status",
+        "$latitude",
+        "$longitude",
+        "$bearing",
+//        "$site_id",
+        "$site_name",
+        "$cluster_name",
+        "$sector",
+        "WCelState type long"
+      ) // use lower case
+      //              .filter('WCelState === 0)
+      .withColumn("latitude", when('latitude.isNull, 65.0).otherwise('latitude))
+      .withColumn("longitude", when('longitude.isNull, 25.0).otherwise('longitude))
+      .withColumn("bearing", when('bearing.isNull, 359.0).otherwise('bearing))
+//      .withColumn("site_id", when('$site_id.isNull, when('wbts_id.isNull, "SITE_ID").otherwise('wbts_id)).otherwise('$site_id))
+      .withColumn("site_name", when('site_name.isNull, when('wbts_name.isNull, "SITE_NAME").otherwise('wbts_name)).otherwise('site_name))
+      .withColumn("cluster_name", when('cluster_name.isNull, "CLUSTER_NAME").otherwise('cluster_name))
+      .withColumn("sector", when('sector.isNull, "SECTOR").otherwise('sector))
+      .withColumnRenamed("uid", "suid")
+      .select(
+        "suid",
+        "plmn_id",
+        "rnc_id",
+        "wbts_id",
+        "wcel_id",
+        "rnc_name",
+        "wbts_name",
+        "wcel_name",
+        "cid",
+        "lac",
+        "rac",
+        "carrier",
+        "active_status",
+        "object_dn",
+        "latitude",
+        "longitude",
+        "bearing",
+//        "site_id",
+        "site_name",
+        "cluster_name",
+        "sector"
+      )
+
+    val cmDfSwVersion = CmModule
+      .inCassandra(cassandraKs)
+      .readCm
+      .where("object_type = 'WCEL' ")
+      .select('uid.as("suid"), 'moVersion.as("sw_version"), 'moVendor, 'site_id)
+
+    val cmDf =
+      cmDfWcel
+        .join(cmDfSwVersion, Seq("suid"), "left")
+        .withColumn("site_id", when('site_id.isNull, when('wbts_id.isNull, "SITE_ID").otherwise('wbts_id)).otherwise('site_id))
+        .filter("moVendor LIKE 'Huawei' ")
+
+    // Add cell icon size based on number of cells per carrier 
+
+    import org.apache.spark.sql.functions._
+    import org.apache.spark.sql.expressions.Window
+    
+    val windowSpec  = Window.orderBy(col("cell_count").desc)
+    
+    val cellIconProperties = cmDf.groupBy('carrier).agg(count('carrier).as("cell_count"))
+        .withColumn("row_number",row_number().over(windowSpec))
+        .withColumn("cell_icon_width", expr("greatest(65 - row_number * 10, 15)"))
+        .withColumn("cell_icon_length", expr("0.19 + row_number * 0.03"))
+        .select('carrier, 'cell_icon_width, 'cell_icon_length)
+
+    cmDf.join(cellIconProperties, Seq("carrier"), "left")  }
+
+  /** Create LTE parameter dataframe */
+  def lteCellParameterTableHuawei(cassandraKs: String): DataFrame = {
+    import com.nokia.ava.npo.cm.CmModule
+    import spark.implicits._
+
+    val cmDfLncel = CmModule
+      .inCassandra(cassandraKs)
+      .readCm(
+        "LNCEL",
+        "moDistName as object_dn",
+        "PLMN_id type string as plmn_id",
+        "MRBTS_id type long as mrbts_id",
+        "LNBTS_id type long as lnbts_id",
+        "LNCEL_id type long as lncel_id",
+        "ne_name type string as mrbts_name",
+        "ne_name type string as lnbts_name",
+        "cell_name type string as lncel_name",
+        "downlink_bandwidth type string as dl_channel_bw",
+        "uplink_bandwidth type string as ul_channel_bw",
+        "downlink_earfcn type string as carrier",
+        "cellid type long as cid",
+        "tracking_area_code type long as tac",
+        "physical_cellid type long as pci",
+        "cell_active_state as active_status",
+        "$latitude",
+        "$longitude",
+        "$bearing",
+//        "$site_id",
+        "$site_name",
+        "$cluster_name",
+        "$sector",
+        "operationalState type long",
+        "expectedCellSize type long as expected_cell_size"
+      )
+//      .filter('pci.isNotNull)
+      .withColumnRenamed("uid", "suid")
+      .withColumn("latitude", when('latitude.isNull, 65.0).otherwise('latitude))
+      .withColumn("longitude", when('longitude.isNull, 25.0).otherwise('longitude))
+      .withColumn("bearing", when('bearing.isNull, 359.0).otherwise('bearing))
+//      .withColumn("site_id", when('$site_id.isNull, when('mrbts_id.isNull, "SITE_ID").otherwise('mrbts_id)).otherwise('$site_id))
+      .withColumn("site_name", when('site_name.isNull, when('mrbts_name.isNull, "SITE_NAME").otherwise('mrbts_name)).otherwise('site_name))
+      .withColumn("cluster_name", when('cluster_name.isNull, "CLUSTER_NAME").otherwise('cluster_name))
+      .withColumn("sector", when('sector.isNull, "SECTOR").otherwise('sector))
+      .select(
+        "suid",
+        "mrbts_id",
+        "lnbts_id",
+        "lncel_id",
+        "plmn_id",
+        "mrbts_name",
+        "lnbts_name",
+        "lncel_name",
+        "cid",
+        "dl_channel_bw",
+        "ul_channel_bw",
+        "carrier",
+        "pci",
+        "tac",
+        "object_dn",
+        "latitude",
+        "longitude",
+        "bearing",
+//        "site_id",
+        "site_name",
+        "cluster_name",
+        "sector",
+        "expected_cell_size",
+        "active_status"
+      ) //, "sw_version")
+    //        .cache()
+
+    val cmDfSwVersion = CmModule
+      .inCassandra(cassandraKs)
+      .readCm
+      .where("object_type = 'LNCEL' ")
+      .select('uid.as("suid"), 'moVersion.as("sw_version"), 'moVendor, 'site_id)
+
+    val cmDf =
+      cmDfLncel
+        .select(
+          "suid",
+          "plmn_id",
+          "mrbts_id",
+          "lnbts_id",
+          "lncel_id",
+          "mrbts_name",
+          "lnbts_name",
+          "lncel_name",
+          "cid",
+          "dl_channel_bw",
+          "ul_channel_bw",
+          "carrier",
+          "pci",
+          "tac",
+          "object_dn",
+          "latitude",
+          "longitude",
+          "bearing",
+//          "site_id",
+          "site_name",
+          "cluster_name",
+          "sector",
+          "expected_cell_size",
+          "active_status"
+        )
+//        .filter('carrier.isNotNull)
+        .join(cmDfSwVersion, Seq("suid"), "left")
+        .withColumn("site_id", when('site_id.isNull, when('mrbts_id.isNull, "SITE_ID").otherwise('mrbts_id)).otherwise('site_id))
+        .filter("moVendor LIKE 'Huawei' ")
+
+    // Add cell icon size based on number of cells per carrier 
+
+    import org.apache.spark.sql.functions._
+    import org.apache.spark.sql.expressions.Window
+    
+    val windowSpec  = Window.orderBy(col("cell_count").desc)
+    
+    val cellIconProperties = cmDf.groupBy('carrier).agg(count('carrier).as("cell_count"))
+        .withColumn("row_number",row_number().over(windowSpec))
+        .withColumn("cell_icon_width", expr("greatest(65 - row_number * 10, 15)"))
+        .withColumn("cell_icon_length", expr("0.19 + row_number * 0.03"))
+        .select('carrier, 'cell_icon_width, 'cell_icon_length)
+
+    cmDf.join(cellIconProperties, Seq("carrier"), "left")
+        .filter("moVendor LIKE 'Huawei' ")
+  }
+
+  def nrCellParameterTableHuawei(cassandraKs: String): DataFrame = {
+    import com.nokia.ava.npo.cm.CmModule
+    import spark.implicits._
+
+    val cmNrCell = CmModule
+        .inCassandra(cassandraKs)
+        .readCm(
+            "NRCELL",
+            "moDistName as object_dn",
+            "PLMN_id type string as plmn_id",
+            "MRBTS_id type string as mrbts_id",
+            "NRBTS_id type string as nrbts_id",
+            "NRCELL_id type long as nrcell_id",
+            "ne_name as mrbts_name",
+            "ne_name as nrbts_name",
+            "nr_du_cell_name as cell_name",
+//            "freqBandIndicatorNR type int as frequency_band",
+//            "chBw type int as channel_bandwidth",
+            "downlink_narfcn type int as carrier",
+            "nr_du_cell_activate_state as active_status",
+//            "gscn type int as gscn",
+//            "ssbScs type int as ss_scs",
+            "physical_cellid type int as pci",
+//            "tddFrameStructure{} as tdd_frame_structure",
+//            "tddFrameStructure{}['frameStructureType'] as ul_dl_data_slot_ratio",
+//            "frameStructureType type int as frame_structure_type",
+            "$latitude",
+            "$longitude",
+            "$bearing",
+//            "$site_id",
+            "$site_name",
+            "$cluster_name",
+            "$sector",
+            "tac type int as tac",
+            "nr_cellid type long as cid"
+        ) // "physical_cellid", "frequency_band", "uplink_narfcn", "downlink_narfcn"
+        .withColumnRenamed("uid", "suid")
+      .withColumn("latitude", when('latitude.isNull, 65.0).otherwise('latitude))
+      .withColumn("longitude", when('longitude.isNull, 25.0).otherwise('longitude))
+      .withColumn("bearing", when('bearing.isNull, 359.0).otherwise('bearing))
+//      .withColumn("site_id", when('$site_id.isNull, when('mrbts_id.isNull, "SITE_ID").otherwise('mrbts_id)).otherwise('$site_id))
+      .withColumn("site_name", when('site_name.isNull, when('mrbts_name.isNull, "SITE_NAME").otherwise('mrbts_name)).otherwise('site_name))
+      .withColumn("cluster_name", when('cluster_name.isNull, "CLUSTER_NAME").otherwise('cluster_name))
+      .withColumn("sector", when('sector.isNull, "SECTOR").otherwise('sector))
+      .select(
+        "suid",
+        "mrbts_id",
+        "nrbts_id",
+        "nrcell_id",
+        "plmn_id",
+        "mrbts_name",
+        "nrbts_name",
+        "cell_name",
+        "cid",
+        "carrier",
+        "pci",
+        "object_dn",
+        "latitude",
+        "longitude",
+        "bearing",
+//        "site_id",
+        "site_name",
+        "cluster_name",
+        "sector",
+        "tac",
+        "active_status"
+      )
+
+    val cmDfSwVersion = CmModule
+      .inCassandra(cassandraKs)
+      .readCm
+      .where("object_type = 'NRCELL' ")
+      .select('uid.as("suid"), 'moVersion.as("sw_version"), 'moVendor, 'site_id)
+      
+      val cmDf = cmNrCell
+         .join(cmDfSwVersion, Seq("suid"), "left")
+        .withColumn("site_id", when('site_id.isNull, when('mrbts_id.isNull, "SITE_ID").otherwise('mrbts_id)).otherwise('site_id))
+        .filter("moVendor LIKE 'Huawei' ")
+     
+    // Add cell icon size based on number of cells per carrier 
+
+    import org.apache.spark.sql.functions._
+    import org.apache.spark.sql.expressions.Window
+    
+    val windowSpec  = Window.orderBy(col("cell_count").desc)
+    
+    val cellIconProperties = cmDf.groupBy('carrier).agg(count('carrier).as("cell_count"))
+        .withColumn("row_number",row_number().over(windowSpec))
+        .withColumn("cell_icon_width", expr("greatest(65 - row_number * 10, 15)"))
+        .withColumn("cell_icon_length", expr("0.19 + row_number * 0.03"))
+        .select('carrier, 'cell_icon_width, 'cell_icon_length)
+
+    cmDf.join(cellIconProperties, Seq("carrier"), "left")
+  }
+
+Title: Multitech table - Huawei
+%spark
+    import org.apache.spark.sql.DataFrame
+
+
+  def multitechParameterTableHuawei(cassandraKs: String): DataFrame = {
+//    val spark = builder().getOrCreate()
+    import spark.implicits._
+
+    val cmDfBts = 
+        gsmBtsParameterTableHuawei(cassandraKs)
+      .select(
+        'suid,
+        'object_dn,
+        'bcch_frequency.as("carrier"),
+        'plmn_id,
+        'bsc_id.as("controller_id"),
+        'bcf_id.as("basestation_id"), // can also be extracted from BCF.SBTSId
+        'bts_id.as("cell_id"),
+        'bsc_name.as("controller_name"),
+        concat('bsc_id, lit("_"), 'bcf_id).as("basestation_name"),
+        'cell_name,
+        'cid,
+        'lac.as("area_code"),
+        'active_status,
+        concat('lac, lit("|"), 'cid).as("lacci"),
+        lit(null).as("rncci"),
+        lit("GSM").as("technology"),
+        'latitude,
+        'longitude,
+        'bearing,
+        'site_id,
+        'site_name,
+        'cluster_name,
+        'sector, 
+        'cell_icon_width, 
+        'cell_icon_length
+      )
+        .select('suid, 'object_dn, 'carrier, 'plmn_id, 'controller_id, 'basestation_id, 'cell_id, 'controller_name, 'basestation_name, 'cell_name, 'cid, 'area_code, 'technology, 'lacci, 'rncci, 'latitude, 'longitude, 'bearing, 'site_id, 'site_name, 'cluster_name, 'sector, 'active_status, 'cell_icon_width, 'cell_icon_length)
+
+    val cmDfWcel = 
+        wcdmaCellParameterTableHuawei(cassandraKs)
+      .select(
+        'suid,
+        'object_dn,
+        'carrier,
+        'plmn_id,
+        'rnc_id.as("controller_id"),
+        'wbts_id.as("basestation_id"), // can also be extracted from WBTS.SBTSId
+        'wcel_id.as("cell_id"),
+        'rnc_name.as("controller_name"),
+        'wbts_name.as("basestation_name"),
+        'wcel_name.as("cell_name"),
+        'cid,
+        'lac.as("area_code"),
+        'active_status,
+        lit("WCDMA").as("technology"),
+        concat('lac, lit("|"), 'cid).as("lacci"),
+        concat('rnc_id, lit("|"), 'cid).as("rncci"),
+        'latitude,
+        'longitude,
+        'bearing,
+        'site_id,
+        'site_name,
+        'cluster_name,
+        'sector, 
+        'cell_icon_width, 
+        'cell_icon_length
+      )
+        .select('suid, 'object_dn, 'carrier, 'plmn_id, 'controller_id, 'basestation_id, 'cell_id, 'controller_name, 'basestation_name, 'cell_name, 'cid, 'area_code, 'technology, 'lacci, 'rncci, 'latitude, 'longitude, 'bearing, 'site_id, 'site_name, 'cluster_name, 'sector, 'active_status, 'cell_icon_width, 'cell_icon_length)
+
+    val cmDfLncel = 
+        lteCellParameterTableHuawei(cassandraKs)
+      .select(
+        'suid,
+        'object_dn,
+        'carrier,
+        'plmn_id,
+        'mrbts_id.as("controller_id"),
+        'lnbts_id.as("basestation_id"), // should be also mrbts_id?
+        'lncel_id.as("cell_id"),
+        'mrbts_name.as("controller_name"),
+        'lnbts_name.as("basestation_name"),
+        'lncel_name.as("cell_name"),
+        'cid,
+        'tac.as("area_code"),
+        'active_status,
+        lit("LTE").as("technology"),
+        lit(null).as("lacci"),
+        lit(null).as("rncci"),
+        'latitude,
+        'longitude,
+        'bearing,
+        'site_id,
+        'site_name,
+        'cluster_name,
+        'sector, 
+        'cell_icon_width, 
+        'cell_icon_length
+      )
+        .select('suid, 'object_dn, 'carrier, 'plmn_id, 'controller_id, 'basestation_id, 'cell_id, 'controller_name, 'basestation_name, 'cell_name, 'cid, 'area_code, 'technology, 'lacci, 'rncci, 'latitude, 'longitude, 'bearing, 'site_id, 'site_name, 'cluster_name, 'sector, 'active_status, 'cell_icon_width, 'cell_icon_length)
+
+    val cmDfNr = nrCellParameterTableHuawei(cassandraKs)
+        .withColumn("technology", lit("NR"))
+        .select('suid, 'object_dn, 'carrier, 'plmn_id, 'mrbts_id.as("controller_id"), 'nrbts_id.as("basestation_id"), 'nrcell_id.as("cell_id"), 'mrbts_name.as("controller_name"), 'nrbts_name.as("basestation_name"), 'cell_name, 'cid, 'tac.as("area_code"), 'technology, 'latitude, 'longitude, 'bearing, 'site_id, 'site_name, 'cluster_name, 'sector, lit(null).as("lacci"), lit(null).as("rncci"), 'active_status, 'cell_icon_width, 'cell_icon_length)
+        .select('suid, 'object_dn, 'carrier, 'plmn_id, 'controller_id, 'basestation_id, 'cell_id, 'controller_name, 'basestation_name, 'cell_name, 'cid, 'area_code, 'technology, 'lacci, 'rncci, 'latitude, 'longitude, 'bearing, 'site_id, 'site_name, 'cluster_name, 'sector, 'active_status, 'cell_icon_width, 'cell_icon_length)
+
+    cmDfBts
+      .union(cmDfWcel)
+      .union(cmDfLncel)
+      .union(cmDfNr)
+      
+  }
+
+
+Title: CM cell info table to Cassandra - Huawei
+
+%spark
+{
+
+    import com.nokia.ava.npo.datastorage.Cassandra
+
+
+    val cmDf = Cassandra
+        .withKeyspace("cass_db")
+        .read("cm_data")
+        .select("uid", "ramlTimeStamp", "48h_follow_up", "delay_site", "excluded_cell", "operator", "scope", "swap_date", "siteid")
+        .withColumnRenamed("ramlTimeStamp","update_time")
+        .withColumnRenamed("uid", "suid")
+        
+    import com.nokia.ava.npo.cm.CmModule
+
+    val multiDf = multitechParameterTableHuawei(cassandraKs  = "cass_db")
+        .select('suid, 'object_dn.as("distName"), 'latitude, 'longitude, 'bearing.as("azimuth"), 'carrier, 'cell_name, 'technology, concat('basestation_name, lit("_"), coalesce('bearing, lit(666)).cast("int")).as("sector_bts"), 'controller_name, 'basestation_name, 'plmn_id, 'controller_id, 'basestation_id, 'cell_id, 'cid, 'area_code, 'lacci, 'rncci, 'cluster_name, 'sector, 'active_status, 'site_id, 'site_name, 'cell_icon_width, 'cell_icon_length)
+        .join(cmDf, Seq("suid")) // Add SA columns that not already included
+        .withColumn("partition_time", to_timestamp(lit("2000-01-01 00 00 00"),"yyyy-MM-dd HH mm ss"))
+        .withColumn("parentDistName", regexp_extract(col("distName"), ".*(?=\\/)", 0))
+        .withColumn("site_name", when(col("siteid").isNotNull, col("siteid")).otherwise(col("site_name")))
+        .withColumn("site_id", when(col("siteid").isNotNull, col("siteid")).otherwise(col("site_id")))
+        .drop("suid")
+        //.withColumn("controller_cell_id", concat('controller_id, lit("_"), 'cell_id)) // required for GSM BSC+Segment 
+        .withColumn("cell_name", when(col("cell_name").isNull, lit("name_null")).otherwise(col("cell_name")))
+        .withColumn("vendor", lit("Huawei"))
+
+
+     println("GSM, Orange")
+     Cassandra
+        .withKeyspace("cass_db")
+        .save(multiDf.filter("technology = 'GSM' and plmn_id = 'orange'").withColumn("distName", expr("CONCAT('PLMN-', plmn_id, '/BSC-', controller_name, '/BCF-', basestation_id, '/BTS-', cid)")).drop("controller_id", "basestation_id", "cell_id"), "cm_cell_info_table", Option(Seq("distName")))
+
+    println("GSM, Proximus")
+    Cassandra
+        .withKeyspace("cass_db")
+        .save(multiDf.filter("technology = 'GSM' and plmn_id = 'proximus'").withColumn("distName", expr("CONCAT('PLMN-', plmn_id, '/BSC-', controller_name, '/BCF-', controller_name, '/BTS-', cid)")).drop("controller_id", "basestation_id", "cell_id"), "cm_cell_info_table", Option(Seq("distName")))
+
+    println("WCDMA, Orange")
+    Cassandra
+        .withKeyspace("cass_db")
+        .save(multiDf.filter("technology = 'WCDMA' and plmn_id = 'orange'"), "cm_cell_info_table", Option(Seq("distName")))
+
+    println("WCDMA, Proximus")
+    Cassandra
+        .withKeyspace("cass_db")
+        .save(multiDf.filter("technology = 'WCDMA' and plmn_id = 'proximus'").withColumn("distName", expr("CONCAT('PLMN-', plmn_id, '/RNC-', controller_name, '/WBTS-', basestation_name, '/WCEL-', cid)")).drop("controller_id", "basestation_id", "cell_id"), "cm_cell_info_table", Option(Seq("distName")))
+
+    println("LTE, Orange")
+    Cassandra
+        .withKeyspace("cass_db")
+        .save(multiDf.filter("technology = 'LTE' and plmn_id = 'orange'").drop("controller_id", "basestation_id", "cell_id"), "cm_cell_info_table", Option(Seq("distName")))
+    
+    println("LTE, Proximus")
+    Cassandra
+        .withKeyspace("cass_db")
+        .save(multiDf.filter("technology = 'LTE' and plmn_id = 'proximus'").withColumn("distName", expr("CONCAT('PLMN-', plmn_id, '/MRBTS-', basestation_name, '/LNBTS-', basestation_name, '/LNCEL-', cell_id)")).drop("controller_id", "basestation_id", "cell_id"), "cm_cell_info_table", Option(Seq("distName")))
+    
+    println("NR, Proximus")
+    Cassandra
+        .withKeyspace("cass_db")
+        .save(multiDf.filter("technology = 'NR' and plmn_id = 'proximus'").drop("controller_id", "basestation_id", "cell_id"), "cm_cell_info_table", Option(Seq("distName")))
+
+
+/*
+        .withColumn("distName", expr("""
+            CASE WHEN technology = 'GSM' and plmn_id = 'orange' THEN CONCAT('PLMN-', plmn_id, '/BSC-', controller_name, '/BCF-', basestation_id, '/BTS-', cid)
+                ELSE CASE WHEN technology = 'NR' THEN distName
+--                ELSE CASE WHEN technology = 'GSM' and plmn_id = 'proximus' THEN CONCAT('PLMN-', plmn_id, '/BSC-', controller_name, '/BCF-', controller_name, '/BTS-', cid)
+--                ELSE CASE WHEN technology = 'WCDMA' and plmn_id = 'orange' THEN distName
+--                ELSE CASE WHEN technology = 'WCDMA' and plmn_id = 'proximus' THEN CONCAT('PLMN-', plmn_id, '/RNC-', controller_name, '/WBTS-', basestation_name, '/WCEL-', cid)
+--                ELSE CASE WHEN technology = 'LTE' and plmn_id = 'orange' THEN distName
+--                ELSE CASE WHEN technology = 'LTE' and plmn_id = 'proximus' THEN CONCAT('PLMN-', plmn_id, '/MRBTS-', basestation_name, '/LNBTS-', basestation_name, '/LNCEL-', cell_id)
+                ELSE NULL
+                END END-- END END END END END
+        """)) // Modify distName to match PM data
+//        .withColumn("distName", expr("""CASE WHEN technology = 'NR' THEN distName ELSE NULL END"""))
+        .filter("distName IS NOT NULL")
+*/
+//    saDf.show(10)
+// CONCAT('PLMN-orange/RNC-', rnc_id, '/WBTS-', nodeb_id, '/WCEL-', cell_id)
+// 
+
+//    saDf
+//        .where("distName = 'PLMN-orange/BSC-B02BRU10/BCF-2/BTS-11859' ") // OBE GSM
+//        .where("distName = 'PLMN-proximus/BSC-03WOMAH/BCF-03WOMAH/BTS-40676' ") // PRX GSM
+//        .where("distName = 'PLMN-orange/RNC-6/WBTS-135/WCEL-58443' ") // OBE WCDMA
+//        .where("distName = 'PLMN-proximus/RNC-02MARAUH/WBTS-02HIT_NODEB_1/WCEL-45414' ") // PRX WCDMA
+//        .where("distName = 'PLMN-orange/MRBTS-67331/LNBTS-67331/LNCEL-2' ") // OBE LTE
+//        .where("distName = 'PLMN-proximus/MRBTS-69CAW_ENODEB_1/LNBTS-69CAW_ENODEB_1/LNCEL-1' ") // PRX LTE
+//        .where("technology = 'WCDMA' and plmn_id = 'proximus' ")
+//        .show(10, false)
+
+}
+
+
+Title: CM cell info table to json and parquet
+%spark
+{
+    import org.apache.hadoop.fs._
+    import org.apache.spark.SparkContext
+    import org.apache.spark.sql.{SaveMode, DataFrame}
+    import scala.util.Try
+    import org.apache.hadoop.conf.Configuration
+    import org.apache.hadoop.io.IOUtils
+    import java.io.IOException
+    //import com.github.mrpowers.spark.daria.hadoop.FsHelpers
+    
+      def writeSingleFile(
+          df: DataFrame,             // must be small
+          format: String = "csv",    // csv, parquet
+          sc: SparkContext,          // pass in spark.sparkContext
+          tmpFolder: String,         // will be deleted, so make sure it doesn't already exist
+          filename: String,          // the full filename you want outputted
+          saveMode: String = "error" // Spark default is error, overwrite and append are also common
+      ): Unit = {
+        df.repartition(1)
+          .write
+          .mode(saveMode)
+          .format(format)
+          .save(tmpFolder)
+        val conf    = sc.hadoopConfiguration
+        val src     = new Path(tmpFolder)
+        val fs      = src.getFileSystem(conf)
+        val oneFile = fs.listStatus(src).map(x => x.getPath.toString()).find(x => x.endsWith(format))
+        val srcFile = new Path(oneFile.getOrElse(""))
+        val dest    = new Path(filename)
+        fs.delete(dest, true)
+        fs.rename(srcFile, dest)
+        fs.delete(src, true)
+      }
+
+  import com.nokia.ava.npo.datastorage.Cassandra
+
+    val saDfCass = Cassandra
+        .withKeyspace("cass_db")
+        .read("cm_cell_info_table")
+        .withColumn("write_time", lit(java.time.LocalDateTime.now().toString))
+       // .filter(!'controller_name.like("%_DR_%")) // to filter out cells temporally in drift BSC 
+       
+    
+   // saDfCass.printSchema
+    saDfCass.show(3, false)
+    
+    writeSingleFile(saDfCass, "json", sc, "s3a://mwingzdata/feature_tables/cm_cell_info_table_tmp", "s3a://mwingzdata/feature_tables/cm_cell_info_table.json", "overwrite")
+
+    saDfCass.write.mode("overwrite")
+        .parquet("s3a://mwingzdata/feature_tables/cm_cell_info_table.parquet")
+        
+}
+
+Title: Druid ingestion  (CM_CELL_INFO_TABLE)
+%spark
+{
+    import requests._
+    import scala.util.parsing.json._
+
+    val rCellInfo = requests.post(druidRestUrl, data = ujson.read(CM_CELL_INFO_TABLE))
+    println(rCellInfo.text())
+    
+}
+
+Title: Cluster, site based on root object to json for lookup
+%spark
+{
+  import com.nokia.ava.npo.datastorage.Cassandra
+
+    val saDfCass = Cassandra
+        .withKeyspace("cass_db")
+        .read("cm_cell_info_table")
+        .filter(!'controller_name.like("%_DR_%"))  // to filter out cells temporally in drift BSC 
+    
+//    saDfCass.printSchema
+    
+    val dfRootdistname = saDfCass
+//        .withColumn("rootSiteDistName", expr("regexp_extract(distName, '([A-Z-0-9]+)/([A-Z-0-9]+)/([A-Z-0-9]+)/([A-Z-0-9]+)', 2)"))
+        .withColumn("rootSiteDistName", expr("CASE WHEN regexp_extract(distName, '([a-zA-Z-_0-9]+)/([a-zA-Z-_0-9]+)/([a-zA-Z-_0-9]+)', 2) LIKE '%BSC%' OR regexp_extract(distName, '([a-zA-Z-_0-9]+)/([a-zA-Z-_0-9]+)/([a-zA-Z-_0-9]+)', 2) LIKE '%RNC%' THEN CONCAT(regexp_extract(distName, '([a-zA-Z-_0-9]+)/([a-zA-Z-_0-9]+)/([a-zA-Z-_0-9]+)', 1),'/',regexp_extract(distName, '([a-zA-Z-_0-9]+)/([a-zA-Z-_0-9]+)/([a-zA-Z-_0-9]+)', 2),'/',regexp_extract(distName, '([a-zA-Z-_0-9]+)/([a-zA-Z-_0-9]+)/([a-zA-Z-_0-9]+)', 3)) WHEN regexp_extract(distName, '([a-zA-Z-_0-9]+)/([a-zA-Z-_0-9]+)/([a-zA-Z-_0-9]+)', 2) LIKE '%MRBTS%' THEN CONCAT(regexp_extract(distName, '([a-zA-Z-_0-9]+)/([a-zA-Z-_0-9]+)/([a-zA-Z-_0-9]+)', 1),'/',regexp_extract(distName, '([a-zA-Z-_0-9]+)/([a-zA-Z-_0-9]+)/([a-zA-Z-_0-9]+)', 2)) ELSE 'no' END"))
+        .select('distName, 'rootSiteDistName, 'cluster_name, 'site_id, 'site_name, 'latitude, 'longitude, 'carrier)
+        .groupBy('rootSiteDistName, 'cluster_name, 'site_id, 'site_name)
+        .agg(avg('latitude).as("latitude"), avg('longitude).as("longitude"), count('distName).as("cell_count"), countDistinct('carrier).as("count_carrier"))
+ 
+//    dfRootdistname.show(10, false)
+        
+    import org.apache.hadoop.fs._
+    import org.apache.spark.SparkContext
+    import org.apache.spark.sql.{SaveMode, DataFrame}
+    import scala.util.Try
+    import org.apache.hadoop.conf.Configuration
+    import org.apache.hadoop.io.IOUtils
+    import java.io.IOException
+    //import com.github.mrpowers.spark.daria.hadoop.FsHelpers
+    
+      def writeSingleFile(
+          df: DataFrame,             // must be small
+          format: String = "csv",    // csv, parquet
+          sc: SparkContext,          // pass in spark.sparkContext
+          tmpFolder: String,         // will be deleted, so make sure it doesn't already exist
+          filename: String,          // the full filename you want outputted
+          saveMode: String = "error" // Spark default is error, overwrite and append are also common
+      ): Unit = {
+        df.repartition(1)
+          .write
+          .mode(saveMode)
+          .format(format)
+          .save(tmpFolder)
+        val conf    = sc.hadoopConfiguration
+        val src     = new Path(tmpFolder)
+        val fs      = src.getFileSystem(conf)
+        val oneFile = fs.listStatus(src).map(x => x.getPath.toString()).find(x => x.endsWith(format))
+        val srcFile = new Path(oneFile.getOrElse(""))
+        val dest    = new Path(filename)
+        fs.delete(dest, true)
+        fs.rename(srcFile, dest)
+        fs.delete(src, true)
+      }
+    
+    writeSingleFile(dfRootdistname, "json", sc, "s3a://mwingzdata/feature_tables/cm_root_dn_table_tmp", "s3a://mwingzdata/feature_tables/cm_root_dn_table.json", "overwrite")
+
+
+}
+
+// CASE WHEN regexp_extract(object_dn, '([A-Z-_0-9]+)/([A-Z-_0-9]+)/([A-Z-_0-9]+)', 2) LIKE '%BSC%' OR regexp_extract(object_dn, '([A-Z-_0-9]+)/([A-Z-_0-9]+)/([A-Z-_0-9]+)', 2) LIKE '%RNC%' THEN CONCAT(regexp_extract(object_dn, '([A-Z-_0-9]+)/([A-Z-_0-9]+)/([A-Z-_0-9]+)', 1),'/',regexp_extract(object_dn, '([A-Z-_0-9]+)/([A-Z-_0-9]+)/([A-Z-_0-9]+)', 2)) ELSE 'no' END,
+// regexp_extract(object_dn, '([A-Z-_0-9]+)/([A-Z-_0-9]+)/([A-Z-_0-9]+)', 2)
+
+
+Title: Site Antenna (Agnostic Data)  to CLUSTER_CELL_INFO_TABLE.json and Parquet
+
+%spark
+{
+    import org.apache.hadoop.fs._
+    import org.apache.spark.SparkContext
+    import org.apache.spark.sql.{SaveMode, DataFrame}
+    import scala.util.Try
+    import org.apache.hadoop.conf.Configuration
+    import org.apache.hadoop.io.IOUtils
+    import java.io.IOException
+    //import com.github.mrpowers.spark.daria.hadoop.FsHelpers
+    
+
+      def writeSingleFile(
+          df: DataFrame,             // must be small
+          format: String = "csv",    // csv, parquet
+          sc: SparkContext,          // pass in spark.sparkContext
+          tmpFolder: String,         // will be deleted, so make sure it doesn't already exist
+          filename: String,          // the full filename you want outputted
+          saveMode: String = "error" // Spark default is error, overwrite and append are also common
+      ): Unit = {
+        df.repartition(1)
+          .write
+          .mode(saveMode)
+          .format(format)
+          .save(tmpFolder)
+        val conf    = sc.hadoopConfiguration
+        val src     = new Path(tmpFolder)
+        val fs      = src.getFileSystem(conf)
+        val oneFile = fs.listStatus(src).map(x => x.getPath.toString()).find(x => x.endsWith(format))
+        val srcFile = new Path(oneFile.getOrElse(""))
+        val dest    = new Path(filename)
+        fs.delete(dest, true)
+        fs.rename(srcFile, dest)
+        fs.delete(src, true)
+      }
+
+  import com.nokia.ava.npo.datastorage.Cassandra
+
+    val saDfCass = Cassandra
+        .withKeyspace("cass_db")
+        .read("site_antenna_table")
+        //.withColumn("distName", when(col("moDistName").isNull, "NA").otherwise(col("moDistName")))
+        //.drop("moDistName")
+        .drop("tecgnology")
+        .withColumn("technology", when(col("tec").isNull, "NA").otherwise(col("tec")))
+        .drop("tec")
+        .withColumn("partition_time", to_timestamp(lit("2000-01-01 00 00 00"),"yyyy-MM-dd HH mm ss"))
+        .select("file_date","cluster_name","siteid","cell_name","technology","vendor","operator","scope","48h_follow_up","delay_site","excluded_cell","swap_date" ,"partition_time")
+        
+    
+    saDfCass.printSchema
+    saDfCass.show(4,false)
+    print(saDfCass.count())
+    //saDfCass.filter('technology.like("%GSM%")).show(5, false)
+    writeSingleFile(saDfCass, "json", sc, "s3a://mwingzdata/feature_tables/cluster_cell_info_table_tmp", "s3a://mwingzdata/feature_tables/cluster_cell_info_table.json", "overwrite")
+    //saDfCass.coalesce(1).write.mode("overwrite").option("header", "true").csv("s3a://mwingzdata/network_data/test/cluster_cell_info_table.csv")
+    saDfCass.write.mode("overwrite")
+        .parquet("s3a://mwingzdata/feature_tables/cluster_cell_info_table.parquet")
+
+}
+
+Title: Druid ingestion  (AGNOSTIC DATA)
+%spark
+{
+
+    import requests._
+    import scala.util.parsing.json._
+
+    val r = requests.post(druidRestUrl, data = ujson.read(cluster_cell_info_table))
+    
+    println(r.text())
+    
+}
+
+Title: Create CM_PARAMETER_LIST to parquet
+%spark
+{
+
+    import spark.implicits._
+    import com.nokia.ava.npo.datastorage.Cassandra
+
+    import org.apache.spark.sql.functions.map
+
+    val cmDf = Cassandra
+        .withKeyspace("cass_db")
+        .read("cm_data")
+        .withColumn("object_type", 'moClass)
+
+    import cdf.raml._
+    
+//    RamlExplode.explodeCm(cmDf).show(10, false)
+    
+    val cmParamListDf = RamlExplode.explodeCm(cmDf)
+        .withColumn("partition_time", to_timestamp(lit("2000-01-01 00 00 00"),"yyyy-MM-dd HH mm ss"))
+
+//    cmParamListDf.show(10)
+
+    val cmListTableName = "cm_parameter_list"
+
+    Cassandra
+        .withKeyspace("cass_db")
+//        .save(cmParamListDf, cmListTableName, Option(Seq("object_dn")),  Option(Seq("object_type", "param_name_full")))
+
+    cmParamListDf.write.mode("overwrite")
+        .parquet(s"s3a://mwingzdata/feature_tables/$cmListTableName.parquet")
+
+}
+
+Title: Druid ingestion  (CM_PARAMETER_LIST)
+%spark
+{
+    import requests._
+    import scala.util.parsing.json._
+
+    val rParamList = requests.post(druidRestUrl, data = ujson.read(CM_PARAMETER_LIST))
+    println(rParamList.text())
+}
+
+Title: CM history explode to cm_parameter_changes into Parquet
+%spark
+/** Explodes CM DataFrame into flattened structure
+    *
+    * @param df CM DataFrame from `com.nokia.ava.raml` data source.
+    *  Expects following columns: <ul>
+    *  <li> 'moDistName,
+    *  <li> 'start_time,
+    *  <li> 'end_time,
+    *  <li> 'itemLists,
+    *  <li> 'pLists,
+    *  <li> 'parameters
+    * @return flattened DataFrame with following fields: <ul>
+    * <li> "object_dn"
+    * <li> "start_time"
+    * <li> "end_time"
+    * <li> "param_name_full"
+    * <li> "param_base_name"
+    * <li> "param_name"
+    * <li> "param_value"
+    */
+    import org.apache.spark.sql.{DataFrame, Row}
+    import org.apache.spark.sql.types._
+    import org.apache.spark.rdd.RDD
+
+  def explodeCmHistoryRdd(cm: RDD[Row]): RDD[Row] = cm.flatMap {
+    /** Explodes nested column to following columns:
+      *
+      * StructField("param_name_full", StringType, false) ::
+      * StructField("param_base_name", StringType, false) ::
+      * StructField("param_name", StringType, false) ::
+      * StructField("param_value", StringType, false)
+      */
+    type colExploder = Any => Traversable[Seq[Any]]
+    def explode(row: Row, colExploders: colExploder*): Seq[Row] = {
+      val (commonCols, explodeCols) = row.toSeq.splitAt(3)
+      colExploders.zip(explodeCols)
+        .flatMap { case (explode, col) =>
+          explode(col)
+        }.map(explodedCols => Row.fromSeq(commonCols ++ explodedCols))
+    }
+    val itemLists: colExploder = (x: Any) => {
+      x.asInstanceOf[Map[String, Any]]
+        .flatMap { case (param, value) =>
+          value.asInstanceOf[Seq[Any]].zipWithIndex
+            .flatMap { case (value, index) =>
+              value.asInstanceOf[Map[String, Any]].map { case (subParam, value) =>
+                Seq[Any](s"$param.$index.$subParam", param, subParam, value)
+              }
+            }
+        }
+    }
+    val pLists: colExploder = (x: Any) => {
+      x.asInstanceOf[Map[String, Any]]
+        .flatMap { case (param, value) =>
+          value.asInstanceOf[Seq[Any]].zipWithIndex
+            .map { case (value, index) =>
+              Seq[Any](s"$param.$index", param, param, value)
+            }
+        }
+    }
+    val parameters: colExploder = (x: Any) => {
+      x.asInstanceOf[Map[String, Any]]
+        .map { case (param, value) =>
+          Seq[Any](param, param, param, value)
+        }
+    }
+
+    row => explode(row, itemLists, pLists, parameters)
+  }
+
+  def explodeCmHistory(df: DataFrame): DataFrame = {
+    import df.sqlContext.implicits._
+    df.sparkSession.createDataFrame(
+      explodeCmHistoryRdd(
+        df.select(
+          'start_time,
+          'end_time,
+          'moDistName.as("object_dn"),
+          'itemLists,
+          'pLists,
+          'parameters
+        ).rdd),
+      StructType(
+        StructField("start_time", TimestampType, false) ::
+          StructField("end_time", TimestampType, false) ::
+          StructField("object_dn", StringType, false) ::
+          StructField("param_name_full", StringType, false) ::
+          StructField("param_base_name", StringType, false) ::
+          StructField("param_name", StringType, false) ::
+          StructField("param_value", StringType, false) :: Nil))
+  }
+  
+//%spark
+/** Explodes CM DataFrame into flattened structure
+    *
+    * @param df CM DataFrame from `com.nokia.ava.raml` data source.
+    *  Expects following columns: <ul>
+    *  <li> 'ramlTimeStamp,
+    *  <li> 'moVersion,
+    *  <li> 'moDistName,
+    *  <li> 'moClass.as("object_type"),
+    *  <li> 'itemLists,
+    *  <li> 'pLists,
+    *  <li> 'parameters
+    * @return flattened DataFrame with following fields: <ul>
+    * <li> "raml_time"
+    * <li> "sw_version"
+    * <li> "object_dn"
+    * <li> "object_type"
+    * <li> "param_name_full"
+    * <li> "param_base_name"
+    * <li> "param_name"
+    * <li> "param_value"
+    */
+    import org.apache.spark.sql.{DataFrame, Row}
+    import org.apache.spark.sql.types._
+    import org.apache.spark.rdd.RDD
+
+  def explodeCmRdd(cm: RDD[Row]): RDD[Row] = cm.flatMap {
+    /** Explodes nested column to following columns:
+      *
+      * StructField("param_name_full", StringType, false) ::
+      * StructField("param_base_name", StringType, false) ::
+      * StructField("param_name", StringType, false) ::
+      * StructField("param_value", StringType, false)
+      */
+    type colExploder = Any => Traversable[Seq[Any]]
+    def explode(row: Row, colExploders: colExploder*): Seq[Row] = {
+      val (commonCols, explodeCols) = row.toSeq.splitAt(4)
+      colExploders.zip(explodeCols)
+        .flatMap { case (explode, col) =>
+          explode(col)
+        }.map(explodedCols => Row.fromSeq(commonCols ++ explodedCols))
+    }
+    val itemLists: colExploder = (x: Any) => {
+      x.asInstanceOf[Map[String, Any]]
+        .flatMap { case (param, value) =>
+          value.asInstanceOf[Seq[Any]].zipWithIndex
+            .flatMap { case (value, index) =>
+              value.asInstanceOf[Map[String, Any]].map { case (subParam, value) =>
+                Seq[Any](s"$param.$index.$subParam", param, subParam, value)
+              }
+            }
+        }
+    }
+    val pLists: colExploder = (x: Any) => {
+      x.asInstanceOf[Map[String, Any]]
+        .flatMap { case (param, value) =>
+          value.asInstanceOf[Seq[Any]].zipWithIndex
+            .map { case (value, index) =>
+              Seq[Any](s"$param.$index", param, param, value)
+            }
+        }
+    }
+    val parameters: colExploder = (x: Any) => {
+      x.asInstanceOf[Map[String, Any]]
+        .map { case (param, value) =>
+          Seq[Any](param, param, param, value)
+        }
+    }
+
+    row => explode(row, itemLists, pLists, parameters)
+  }
+
+  def explodeCm(df: DataFrame): DataFrame = {
+    import df.sqlContext.implicits._
+    df.sparkSession.createDataFrame(
+      explodeCmRdd(
+        df.select(
+          'ramlTimeStamp.as("raml_time"),
+          'moVersion.as("sw_version"),
+          'moDistName.as("object_dn"),
+          'object_type,
+          'itemLists,
+          'pLists,
+          'parameters
+        ).rdd),
+      StructType(
+        StructField("raml_time", TimestampType, false) ::
+          StructField("sw_version", StringType, false) ::
+          StructField("object_dn", StringType, false) ::
+          StructField("object_type", StringType, false) ::
+          StructField("param_name_full", StringType, false) ::
+          StructField("param_base_name", StringType, false) ::
+          StructField("param_name", StringType, false) ::
+          StructField("param_value", StringType, false) :: Nil))
+  }
+  
+//%spark
+
+  import org.apache.spark.sql.{DataFrame}
+
+  def cmHistoryTableFull(technology: String, // Label with technology
+                     rootObject: String, // Filter DN containing this string
+                     cassandraKs: String,
+                     numberOfDaysFromNow: Int): DataFrame = {
+    import com.nokia.ava.npo.datastorage.Cassandra
+    import org.apache.spark.sql.functions.explode
+    import org.apache.spark.sql.types.{StringType, StructType, StructField}
+
+    val dfParamHistory = explodeCmHistory(Cassandra
+      .withKeyspace(cassandraKs)
+      .read("cm_history")
+      .filter('end_time.gt('start_time))
+      .filter(s"end_time > date_sub(current_date(),$numberOfDaysFromNow) OR start_time > date_sub(current_date(), $numberOfDaysFromNow)")
+      .filter('moDistName.contains(rootObject))
+
+       // filter wrong instances, files maybe loaded in wrong order
+    )
+//      .select('moDistName, 'start_time, 'end_time, explode('parameters))
+//      .toDF("object_dn", "start_time", "end_time", "param_name", "param_value")
+
+    val dfCm = explodeCm(Cassandra
+      .withKeyspace(cassandraKs)
+      .read("cm_data"))
+//      .select('moDistName, explode('parameters))
+//      .toDF("object_dn", "param_name", "param_value_curr")
+      .withColumnRenamed("param_value", "param_value_curr")
+
+    import org.apache.spark.sql.expressions.Window
+    val overNs = Window.partitionBy('object_dn, 'param_name).orderBy('end_time)
+    val param_after = lead('param_value, 1).over(overNs)
+
+    dfParamHistory
+      .select('object_dn,
+              'param_name_full,
+              'param_base_name,
+              'param_name,
+              'param_value.as("param_value_before"),
+              'end_time.as("time"),
+              param_after.as("param_value_hist")
+              )
+      .join(dfCm, Seq("object_dn", "param_name_full", "param_base_name", "param_name"))
+      .select('object_dn,
+              'time,
+              'param_name_full,
+              'param_base_name,
+              'param_name,
+              'param_value_before,
+              coalesce('param_value_hist, 'param_value_curr).as("param_value")) // Take value from history if exist, otherwise take current value
+      .filter('param_value_before.notEqual('param_value)) // Filter errors, maybe due to errors in Cm loading
+//      .filter('object_dn.contains(rootObject))
+      .withColumn("technology", lit(technology))
+  .withColumn("technology", lit(technology))
+
+  }
+  
+//%spark
+{
+
+    import com.nokia.ava.npo.datastorage.Cassandra
+//    import com.nokia.ava.npo.analysis.Udf
+//    Udf.register(spark)
+
+    val technologyDefinitionList = List(("LTE", "MRBTS"), ("WCDMA", "RNC"), ("GSM", "BSC"), ("NR", "NRCELL"), ("ANT", "RETU"))
+
+    for (technologyDefinition <- technologyDefinitionList) {
+        val cmHistoryTableDf = cmHistoryTableFull(technology = technologyDefinition._1,
+            rootObject = technologyDefinition._2,
+            cassandraKs = "cass_db", numberOfDaysFromNow = 5)
+   
+   val rootObject = technologyDefinition._2
+    println(technologyDefinition)
+
+    cmHistoryTableDf
+//        .filter("time > date_sub(current_date(),25)")
+//        .coalesce(1)
+//        .write.mode("overwrite").option("compression", "gzip").json(s"s3a://syvprod/feature_tables/cm_parameter_changes.json.gz")    
+        .write.mode("overwrite").partitionBy("technology").parquet(s"s3a://mwingzdata/feature_tables/cm_parameter_changes_part.parquet/technology=$rootObject")
+    }
+}
